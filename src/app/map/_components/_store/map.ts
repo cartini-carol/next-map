@@ -1,0 +1,11 @@
+import { Map } from "ol";
+import { create } from "zustand";
+
+/**
+ * mapStore
+ */
+export const useMapStore = create((set) => ({
+  map: null,
+  populateMap: (mapGenerated: any) => set(() => ({ map: mapGenerated })),
+  removeMap: () => set({ map: null }),
+}));

@@ -12,13 +12,15 @@ import {
   defaults as defaultControls,
 } from "ol/control";
 import { createStringXY } from "ol/coordinate";
+import { useMapStore } from "./_store/map";
 
 export const Maps = () => {
+  const setMap = useMapStore((state: any) => state.populateMap);
   const ref = useRef(null);
 
   useEffect(() => {
     if (ref.current) {
-      new Map({
+      const map = new Map({
         target: ref.current,
         layers: [new TileLayer({ source: new OSM() })],
         view: new View({
@@ -39,8 +41,10 @@ export const Maps = () => {
           }),
         ]),
       });
+
+      setMap(map);
     }
-  }, [ref]);
+  }, [ref, setMap]);
 
   return (
     <div className="absolute w-screen h-screen">
