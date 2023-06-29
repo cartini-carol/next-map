@@ -1,10 +1,6 @@
 "use client";
 
 import { Map, View } from "ol";
-import TileLayer from "ol/layer/Tile";
-import { fromLonLat } from "ol/proj";
-import OSM from "ol/source/OSM";
-import { useEffect, useRef } from "react";
 import {
   MousePosition,
   ScaleLine,
@@ -12,11 +8,20 @@ import {
   defaults as defaultControls,
 } from "ol/control";
 import { createStringXY } from "ol/coordinate";
+import TileLayer from "ol/layer/Tile";
+import { fromLonLat } from "ol/proj";
+import OSM from "ol/source/OSM";
+import { FunctionComponent, use, useEffect, useRef } from "react";
 import { useMapStore } from "./_store/map";
+import { RepairShop } from "@prisma/client";
 
-export const Maps = () => {
+export const Maps: FunctionComponent<{ data: any }> = ({ data }) => {
   const setMap = useMapStore((state: any) => state.populateMap);
   const ref = useRef(null);
+
+  useEffect(() => {
+    console.log(data);
+  }, [data]);
 
   useEffect(() => {
     if (ref.current) {
