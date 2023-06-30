@@ -1,4 +1,3 @@
-import { RepairShop } from "@prisma/client";
 import { prisma } from "utils/db";
 import { Maps } from "./_components/map";
 
@@ -7,7 +6,18 @@ export const metadata = {
 };
 
 export default async function MapPage() {
-  let repairShop = await prisma.repairShop.findMany({});
+  let repairShop = await prisma.repairShop.findMany({
+    where: {
+      repairShopStatusType: "OPERATION",
+    },
+    select: {
+      displayName: true,
+      repairShopFranchiseType: true,
+      RepairShopOption: true,
+      lat: true,
+      lng: true,
+    },
+  });
 
   return <Maps data={repairShop} />;
 }

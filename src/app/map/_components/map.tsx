@@ -1,6 +1,6 @@
 "use client";
 
-import { Map, View } from "ol";
+import { Feature, Map, View } from "ol";
 import {
   MousePosition,
   ScaleLine,
@@ -8,20 +8,83 @@ import {
   defaults as defaultControls,
 } from "ol/control";
 import { createStringXY } from "ol/coordinate";
+import WKT from "ol/format/WKT";
+import Layer from "ol/layer/Layer";
 import TileLayer from "ol/layer/Tile";
+import VectorLayer from "ol/layer/Vector";
 import { fromLonLat } from "ol/proj";
 import OSM from "ol/source/OSM";
-import { FunctionComponent, use, useEffect, useRef } from "react";
+import VectorSource from "ol/source/Vector";
+import { FunctionComponent, useEffect, useRef } from "react";
 import { useMapStore } from "./_store/map";
-import { RepairShop } from "@prisma/client";
+import ClusterSource from "ol/source/Cluster";
+import { Circle, Fill, Style } from "ol/style";
+import { StyleLike } from "ol/style/Style";
 
 export const Maps: FunctionComponent<{ data: any }> = ({ data }) => {
+  const map: Map = useMapStore((state: any) => state.map);
   const setMap = useMapStore((state: any) => state.populateMap);
   const ref = useRef(null);
 
+  let currentResolution: number;
+  /**
+   * cluster source style
+   * @param feature
+   */
+  const clusterStyleFunction: StyleLike = (feature, resolution) => {
+    // if (resolution !== currentResolution) {
+    //   currentResolution = resolution;
+    // }
+
+    const size = feature.get("features").length;
+    const count = feature.get("features")[0].get("count");
+
+    return new Style({
+      image: new Circle({
+        radius: 0.25 * size,
+        fill: new Fill({
+          color: [255, 0, 0, Math.min(0.8, 0.4 + size / count)],
+        }),
+      }),
+    });
+  };
+
   useEffect(() => {
-    console.log(data);
-  }, [data]);
+    if (map && data) {
+      const isLayers = map
+        .getAllLayers()
+        .find((layer: Layer) => layer.get("name") === "repairShop");
+      if (isLayers) {
+        map.removeLayer(isLayers);
+      }
+      const format = new WKT();
+      const features = data.map((item: any) => {
+        const { lat, lng, ...info } = item;
+        const wkt = `POINT(${lng} ${lat})`;
+        const feature = format.readFeature(wkt, {
+          dataProjection: "EPSG:4326",
+          featureProjection: "EPSG:3857",
+        });
+
+        feature.setProperties({ ...info, count: data.length });
+
+        return feature;
+      });
+
+      const layer = new VectorLayer({
+        source: new ClusterSource({
+          distance: 40,
+          source: new VectorSource({
+            features,
+          }),
+        }),
+        style: clusterStyleFunction,
+      });
+
+      layer.set("name", "repairShop");
+      map.addLayer(layer);
+    }
+  }, [map, data]);
 
   useEffect(() => {
     if (ref.current) {
@@ -46,6 +109,8 @@ export const Maps: FunctionComponent<{ data: any }> = ({ data }) => {
           }),
         ]),
       });
+
+      console.log(map);
 
       setMap(map);
     }
