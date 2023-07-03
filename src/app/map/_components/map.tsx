@@ -1,6 +1,6 @@
 "use client";
 
-import { Feature, Map, View } from "ol";
+import { Map, MapBrowserEvent, MapEvent, View } from "ol";
 import {
   MousePosition,
   ScaleLine,
@@ -13,39 +13,53 @@ import Layer from "ol/layer/Layer";
 import TileLayer from "ol/layer/Tile";
 import VectorLayer from "ol/layer/Vector";
 import { fromLonLat } from "ol/proj";
+import ClusterSource from "ol/source/Cluster";
 import OSM from "ol/source/OSM";
 import VectorSource from "ol/source/Vector";
-import { FunctionComponent, useEffect, useRef } from "react";
-import { useMapStore } from "./_store/map";
-import ClusterSource from "ol/source/Cluster";
-import { Circle, Fill, Style } from "ol/style";
+import { Circle, Fill, Stroke, Style, Text } from "ol/style";
 import { StyleLike } from "ol/style/Style";
+import { FunctionComponent, useEffect, useRef, useState } from "react";
+import { useMapStore } from "../_store/map";
 
 export const Maps: FunctionComponent<{ data: any }> = ({ data }) => {
   const map: Map = useMapStore((state: any) => state.map);
   const setMap = useMapStore((state: any) => state.populateMap);
   const ref = useRef(null);
+  const [selectFeature, setSelectFeature] = useState();
 
-  let currentResolution: number;
   /**
    * cluster source style
    * @param feature
    */
   const clusterStyleFunction: StyleLike = (feature, resolution) => {
-    // if (resolution !== currentResolution) {
-    //   currentResolution = resolution;
-    // }
-
     const size = feature.get("features").length;
     const count = feature.get("features")[0].get("count");
 
     return new Style({
       image: new Circle({
-        radius: 0.25 * size,
+        radius: (400 * size) / resolution,
         fill: new Fill({
           color: [255, 0, 0, Math.min(0.8, 0.4 + size / count)],
         }),
       }),
+      text: new Text({
+        fill: new Fill({
+          color: "white",
+        }),
+        stroke: new Stroke({
+          width: 1,
+          color: "black",
+        }),
+        text: `${size}`,
+        scale: 1.1,
+      }),
+    });
+  };
+
+  const handlePointerMove = (e: MapBrowserEvent<any>) => {
+    console.log(e);
+    map.forEachFeatureAtPixel(e.pixel, (f) => {
+      console.log(f.getProperties());
     });
   };
 
@@ -110,7 +124,7 @@ export const Maps: FunctionComponent<{ data: any }> = ({ data }) => {
         ]),
       });
 
-      console.log(map);
+      // map.on("pointermove", handlePointerMove);
 
       setMap(map);
     }
