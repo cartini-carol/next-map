@@ -1,6 +1,6 @@
 "use client";
 
-import { Map, MapBrowserEvent, MapEvent, View } from "ol";
+import { Feature, Map, MapBrowserEvent, View } from "ol";
 import {
   MousePosition,
   ScaleLine,
@@ -18,14 +18,13 @@ import OSM from "ol/source/OSM";
 import VectorSource from "ol/source/Vector";
 import { Circle, Fill, Stroke, Style, Text } from "ol/style";
 import { StyleLike } from "ol/style/Style";
-import { FunctionComponent, useEffect, useRef, useState } from "react";
+import { FunctionComponent, useEffect, useRef } from "react";
 import { useMapStore } from "../_store/map";
 
 export const Maps: FunctionComponent<{ data: any }> = ({ data }) => {
   const map: Map = useMapStore((state: any) => state.map);
   const setMap = useMapStore((state: any) => state.populateMap);
   const ref = useRef(null);
-  const [selectFeature, setSelectFeature] = useState();
 
   /**
    * cluster source style
@@ -53,13 +52,6 @@ export const Maps: FunctionComponent<{ data: any }> = ({ data }) => {
         text: `${size}`,
         scale: 1.1,
       }),
-    });
-  };
-
-  const handlePointerMove = (e: MapBrowserEvent<any>) => {
-    console.log(e);
-    map.forEachFeatureAtPixel(e.pixel, (f) => {
-      console.log(f.getProperties());
     });
   };
 
@@ -124,11 +116,34 @@ export const Maps: FunctionComponent<{ data: any }> = ({ data }) => {
         ]),
       });
 
-      // map.on("pointermove", handlePointerMove);
-
       setMap(map);
     }
   }, [ref, setMap]);
+
+  useEffect(() => {
+    if (map) {
+      map.on("pointermove", (e: MapBrowserEvent<any>) => {
+        if (map) {
+          map.forEachFeatureAtPixel(e.pixel, (f) => {
+            const features = f.get("features");
+
+            const statics = features.reduce((a: any, b: Feature) => {
+              const type = b.get("repairShopFranchiseType");
+              if (!a[b.get("repairShopFranchiseType")]) {
+                a[type] = 0;
+              }
+
+              a[type] += 1;
+
+              return a;
+            }, {});
+
+            console.log(statics);
+          });
+        }
+      });
+    }
+  }, [map]);
 
   return (
     <div className="absolute w-screen h-screen">
