@@ -6,6 +6,6 @@ import { create } from "zustand";
  */
 export const useMapStore = create((set) => ({
   map: null,
-  populateMap: (mapGenerated: any) => set(() => ({ map: mapGenerated })),
+  populateMap: (mapGenerated: Map) => set(() => ({ map: mapGenerated })),
   removeMap: () => set({ map: null }),
 }));

@@ -1,6 +1,6 @@
 "use client";
 
-import { Feature, Map, MapBrowserEvent, View } from "ol";
+import { Feature, Map, MapBrowserEvent, Overlay, View } from "ol";
 import {
   MousePosition,
   ScaleLine,
@@ -18,13 +18,19 @@ import OSM from "ol/source/OSM";
 import VectorSource from "ol/source/Vector";
 import { Circle, Fill, Stroke, Style, Text } from "ol/style";
 import { StyleLike } from "ol/style/Style";
-import { FunctionComponent, useEffect, useRef } from "react";
+import { FunctionComponent, useEffect, useRef, useState } from "react";
 import { useMapStore } from "../_store/map";
+import { useOverlayStore } from "../_store/overlay";
+import { StatisticsOverlay } from "./overlays/statistics";
+import { unique } from "next/dist/build/utils";
 
 export const Maps: FunctionComponent<{ data: any }> = ({ data }) => {
   const map: Map = useMapStore((state: any) => state.map);
   const setMap = useMapStore((state: any) => state.populateMap);
+  const overlay: Overlay = useOverlayStore((state: any) => state.overlay);
   const ref = useRef(null);
+
+  const [info, setInfo] = useState(undefined);
 
   /**
    * cluster source style
@@ -124,6 +130,7 @@ export const Maps: FunctionComponent<{ data: any }> = ({ data }) => {
     if (map) {
       map.on("pointermove", (e: MapBrowserEvent<any>) => {
         if (map) {
+          overlay.setPosition(undefined);
           map.forEachFeatureAtPixel(e.pixel, (f) => {
             const features = f.get("features");
 
@@ -138,6 +145,10 @@ export const Maps: FunctionComponent<{ data: any }> = ({ data }) => {
               return a;
             }, {});
 
+            overlay.setPosition(e.coordinate);
+
+            setInfo({ ...statics });
+
             console.log(statics);
           });
         }
@@ -145,9 +156,16 @@ export const Maps: FunctionComponent<{ data: any }> = ({ data }) => {
     }
   }, [map]);
 
+  useEffect(() => {
+    if (map && overlay && overlay.get("name") === "statistics") {
+      overlay.setMap(map);
+    }
+  }, [map, overlay]);
+
   return (
     <div className="absolute w-screen h-screen">
       <div ref={ref} className="absolute w-full h-full" />
+      <StatisticsOverlay info={info} />
     </div>
   );
 };
