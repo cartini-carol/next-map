@@ -131,26 +131,28 @@ export const Maps: FunctionComponent<{ data: any }> = ({ data }) => {
       map.on("pointermove", (e: MapBrowserEvent<any>) => {
         if (map) {
           overlay.setPosition(undefined);
-          map.forEachFeatureAtPixel(e.pixel, (f) => {
-            const features = f.get("features");
+          map.forEachFeatureAtPixel(
+            e.pixel,
+            (f) => {
+              const features = f.get("features");
 
-            const statics = features.reduce((a: any, b: Feature) => {
-              const type = b.get("repairShopFranchiseType");
-              if (!a[b.get("repairShopFranchiseType")]) {
-                a[type] = 0;
-              }
+              const statics = features.reduce((a: any, b: Feature) => {
+                const type = b.get("repairShopFranchiseType");
+                if (!a[b.get("repairShopFranchiseType")]) {
+                  a[type] = 0;
+                }
 
-              a[type] += 1;
+                a[type] += 1;
 
-              return a;
-            }, {});
+                return a;
+              }, {});
 
-            overlay.setPosition(e.coordinate);
+              overlay.setPosition(e.coordinate);
 
-            setInfo({ ...statics });
-
-            console.log(statics);
-          });
+              setInfo({ ...statics });
+            },
+            { layerFilter: (layer) => layer.get("name") === "repairShop" }
+          );
         }
       });
     }

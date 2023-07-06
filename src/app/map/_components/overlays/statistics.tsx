@@ -1,4 +1,4 @@
-import { useMapStore } from "app/map/_store/map";
+import { Franchise, FranchiseType } from "app/map/_const/Franchise";
 import { useOverlayStore } from "app/map/_store/overlay";
 import { Overlay } from "ol";
 import { FunctionComponent, useEffect, useRef } from "react";
@@ -23,6 +23,7 @@ export const StatisticsOverlay: FunctionComponent<StatisticsOverlayProps> = ({
             duration: 500,
           },
         },
+        offset: [15, 15],
       });
       overlay.set("name", "statistics");
       setOverlay(overlay);
@@ -30,13 +31,18 @@ export const StatisticsOverlay: FunctionComponent<StatisticsOverlayProps> = ({
   }, [setOverlay]);
 
   return (
-    <div
+    <section
       ref={ref}
-      className="absolute bg-white shadow-current text-black px-1 w-48 rounded-sm"
+      className="absolute bg-white shadow-current text-black px-3 py-3 w-48 rounded-sm"
     >
-      <div>스피트 메이트 : {info?.SM}</div>
-      <div>GS 엠비즈 : {info?.GS}</div>
-      <div>기타 : {info?.ETC}</div>
-    </div>
+      {Object.entries(Franchise).map(([k, v]) => (
+        <div key={k} className="flex">
+          <span className="text-stone-800 flex-[2_2_0%]">{v}</span>
+          <span className="font-semibold flex-none text-right">
+            {info ? info[k as FranchiseType] : 0}
+          </span>
+        </div>
+      ))}
+    </section>
   );
 };
