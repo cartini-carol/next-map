@@ -1,6 +1,6 @@
 import { prisma } from "utils/db";
 import { Maps } from "./_components/map";
-import { SearchBar } from "./_components/search";
+import { SearchForm } from "./_components/search";
 
 export const metadata = {
   title: "캐지도",
@@ -23,7 +23,7 @@ export default async function MapPage() {
   return (
     <>
       <Maps data={repairShop} />
-      <SearchBar />
+      <SearchForm />
     </>
   );
 }
