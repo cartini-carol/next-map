@@ -22,7 +22,6 @@ import { FunctionComponent, useEffect, useRef, useState } from "react";
 import { useMapStore } from "../_store/map";
 import { useOverlayStore } from "../_store/overlay";
 import { StatisticsOverlay } from "./overlays/statistics";
-import { unique } from "next/dist/build/utils";
 
 export const Maps: FunctionComponent<{ data: any }> = ({ data }) => {
   const map: Map = useMapStore((state: any) => state.map);
@@ -42,9 +41,13 @@ export const Maps: FunctionComponent<{ data: any }> = ({ data }) => {
 
     return new Style({
       image: new Circle({
-        radius: (400 * size) / resolution,
+        radius: (250 * size) / resolution,
         fill: new Fill({
-          color: [255, 0, 0, Math.min(0.8, 0.4 + size / count)],
+          color: [255, 153, 0, Math.min(0.8, 0.4 + size / count)],
+        }),
+        stroke: new Stroke({
+          color: [255, 153, 0],
+          width: 2,
         }),
       }),
       text: new Text({
@@ -52,11 +55,11 @@ export const Maps: FunctionComponent<{ data: any }> = ({ data }) => {
           color: "white",
         }),
         stroke: new Stroke({
-          width: 1,
-          color: "black",
+          width: 2,
+          color: [255, 153, 0],
         }),
         text: `${size}`,
-        scale: 1.1,
+        scale: size <= 50 ? 1.5 : 1.2,
       }),
     });
   };

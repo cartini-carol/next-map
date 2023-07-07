@@ -28,7 +28,7 @@ export const StatisticsOverlay: FunctionComponent<StatisticsOverlayProps> = ({
       overlay.set("name", "statistics");
       setOverlay(overlay);
     }
-  }, [setOverlay]);
+  }, []);
 
   return (
     <section
