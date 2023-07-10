@@ -22,6 +22,8 @@ import { FunctionComponent, useEffect, useRef, useState } from "react";
 import { useMapStore } from "../_store/map";
 import { useOverlayStore } from "../_store/overlay";
 import { StatisticsOverlay } from "./overlays/statistics";
+import { useQuery } from "react-query";
+import { GET } from "app/api/route";
 
 export const Maps: FunctionComponent<{ data: any }> = ({ data }) => {
   const map: Map = useMapStore((state: any) => state.map);
@@ -30,6 +32,11 @@ export const Maps: FunctionComponent<{ data: any }> = ({ data }) => {
   const ref = useRef(null);
 
   const [info, setInfo] = useState(undefined);
+  const [ds, setDs] = useState(data);
+
+  const { data: repairShop } = useQuery("Repairshop", () =>
+    GET({ repairShopStatusType: "OPERATION" })
+  );
 
   /**
    * cluster source style

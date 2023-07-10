@@ -39,7 +39,7 @@ export const StatisticsOverlay: FunctionComponent<StatisticsOverlayProps> = ({
         <div key={k} className="flex">
           <span className="text-stone-800 flex-[2_2_0%]">{v}</span>
           <span className="font-semibold flex-none text-right">
-            {info ? info[k as FranchiseType] : 0}
+            {info ? info[k as FranchiseType] : 0 || 0}
           </span>
         </div>
       ))}
