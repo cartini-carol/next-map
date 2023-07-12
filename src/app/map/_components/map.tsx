@@ -22,8 +22,6 @@ import { FunctionComponent, useEffect, useRef, useState } from "react";
 import { useMapStore } from "../_store/map";
 import { useOverlayStore } from "../_store/overlay";
 import { StatisticsOverlay } from "./overlays/statistics";
-import { useQuery } from "react-query";
-import { GET } from "app/api/route";
 
 export const Maps: FunctionComponent<{ data: any }> = ({ data }) => {
   const map: Map = useMapStore((state: any) => state.map);
@@ -33,10 +31,6 @@ export const Maps: FunctionComponent<{ data: any }> = ({ data }) => {
 
   const [info, setInfo] = useState(undefined);
   const [ds, setDs] = useState(data);
-
-  const { data: repairShop } = useQuery("Repairshop", () =>
-    GET({ repairShopStatusType: "OPERATION" })
-  );
 
   /**
    * cluster source style
@@ -175,8 +169,8 @@ export const Maps: FunctionComponent<{ data: any }> = ({ data }) => {
   }, [map, overlay]);
 
   return (
-    <div className="absolute w-screen h-screen">
-      <div ref={ref} className="absolute w-full h-full" />
+    <div className="relative w-full h-full">
+      <div ref={ref} className="relative w-full h-full" />
       <StatisticsOverlay info={info} />
     </div>
   );
