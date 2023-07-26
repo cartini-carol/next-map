@@ -1,3 +1,5 @@
+import { Headers } from "./_components/headers";
+import { NextAuthProvider } from "./_providers/auth";
 import "./globals.css";
 import { Inter } from "next/font/google";
 
@@ -15,7 +17,14 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        <div className="relative w-screen h-screen box-border flex flex-col">
+          <NextAuthProvider>
+            <Headers />
+            {children}
+          </NextAuthProvider>
+        </div>
+      </body>
     </html>
   );
 }
