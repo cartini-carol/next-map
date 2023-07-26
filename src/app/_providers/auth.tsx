@@ -1,6 +1,5 @@
 "use client";
 
-import { NextAuthOptions } from "next-auth";
 import { SessionProvider } from "next-auth/react";
 
 type Props = {

@@ -80,6 +80,8 @@ model AccountProvider {
   oauthAccessToken String    @db.VarChar
   accountId        Int
   Account          Account   @relation(fields: [accountId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_a2c6357bde0000d58534aef73c7")
+
+  @@index([accountId], map: "accountprovider_accountid_idx")
 }
 
 model Address {
@@ -119,6 +121,7 @@ model Administrator {
   Event_Event_registerIdToAdministrator     Event[]                                @relation("Event_registerIdToAdministrator")
   Event_Event_editorIdToAdministrator       Event[]                                @relation("Event_editorIdToAdministrator")
   Faq                                       Faq[]
+  HappyCallStateLog                         HappyCallStateLog[]
   Notice                                    Notice[]
   ProductPriceBulk                          ProductPriceBulk[]
   Transaction                               Transaction[]
@@ -166,6 +169,8 @@ model AlimTalkLog {
   requestMessageData String?  @db.VarChar(5000)
   responseData       String?  @db.VarChar(5000)
   responseCode       Int?
+
+  @@index([phoneNumber], map: "alimtalklog_phonenumber_idx")
 }
 
 model AppStoreConnectRating {
@@ -636,11 +641,11 @@ model CouponDiscountAssignedProductOption {
 }
 
 model CouponTemplate {
-  id                                  Int                                        @id(map: "PK_5ab5b04a85a03688bdb36faf311") @default(autoincrement())
-  createdAt                           DateTime                                   @default(now()) @db.Timestamptz(6)
-  updatedAt                           DateTime                                   @default(now()) @db.Timestamptz(6)
-  deletedAt                           DateTime?                                  @db.Timestamptz(6)
-  couponName                          String                                     @unique(map: "couponTemplate") @db.VarChar(100)
+  id                                  Int                                            @id(map: "PK_5ab5b04a85a03688bdb36faf311") @default(autoincrement())
+  createdAt                           DateTime                                       @default(now()) @db.Timestamptz(6)
+  updatedAt                           DateTime                                       @default(now()) @db.Timestamptz(6)
+  deletedAt                           DateTime?                                      @db.Timestamptz(6)
+  couponName                          String                                         @unique(map: "couponTemplate") @db.VarChar(100)
   couponType                          CouponTemplate_coupontype_enum
   couponTargetServices                CouponTemplate_coupontargetservices_enum[]
   isShowCouponIssueButton             Boolean?
@@ -648,19 +653,19 @@ model CouponTemplate {
   isAllowIsolateDelivery              Boolean?
   isOnlyApp                           Boolean?
   isUnitDiscount                      Boolean?
-  productDetailPageText               String?                                    @db.VarChar(100)
+  productDetailPageText               String?                                        @db.VarChar(100)
   isOperating                         Boolean
-  isExposure                          Boolean                                    @default(false)
+  isExposure                          Boolean                                        @default(false)
   isAllowDuplication                  Boolean?
   couponDiscountMethod                CouponTemplate_coupondiscountmethod_enum
   discountPrice                       Int?
   discountRate                        Int?
   fixedPrice                          Int?
-  fromIssuedAt                        DateTime                                   @db.Timestamptz(6)
-  toIssuedAt                          DateTime                                   @db.Timestamptz(6)
+  fromIssuedAt                        DateTime                                       @db.Timestamptz(6)
+  toIssuedAt                          DateTime                                       @db.Timestamptz(6)
   availableType                       CouponTemplate_availabletype_enum
-  fromAvailabledAt                    DateTime?                                  @db.Timestamptz(6)
-  toAvailabledAt                      DateTime?                                  @db.Timestamptz(6)
+  fromAvailabledAt                    DateTime?                                      @db.Timestamptz(6)
+  toAvailabledAt                      DateTime?                                      @db.Timestamptz(6)
   availablePeriod                     Int?
   couponMinPriceType                  CouponTemplate_couponminpricetype_enum?
   minPrice                            Int?
@@ -670,18 +675,21 @@ model CouponTemplate {
   maxIssuedAmount                     Int?
   paymentMethods                      CouponTemplate_paymentmethods_enum[]
   paymentCards                        Json?
-  createdUserName                     String?                                    @db.VarChar(100)
-  updatedUserName                     String?                                    @db.VarChar(100)
+  createdUserName                     String?                                        @db.VarChar(100)
+  updatedUserName                     String?                                        @db.VarChar(100)
   deliveryTemplateId                  Int?
   productCategoryId                   Int?
-  memo                                String?                                    @db.VarChar(300)
-  availableChannels                   String[]                                   @db.VarChar
+  memo                                String?                                        @db.VarChar(300)
+  availableChannels                   String[]                                       @db.VarChar
+  productDetailPageBenefitDisplay     CouponTemplate_couponbenefitdisplaytypes_enum?
+  productListPageBenefitDisplay       CouponTemplate_couponbenefitdisplaytypes_enum?
+  productListPageText                 String?                                        @db.VarChar(100)
   Coupon                              Coupon[]
   CouponApplyProductOption            CouponApplyProductOption[]
   CouponCode                          CouponCode[]
   CouponDiscountAssignedProductOption CouponDiscountAssignedProductOption[]
-  DeliveryTemplate                    DeliveryTemplate?                          @relation(fields: [deliveryTemplateId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_7e3d9545a5a8ebea428fc0617b4")
-  ProductCategory                     ProductCategory?                           @relation(fields: [productCategoryId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_b0a36ee446b76f30303b077cd4e")
+  DeliveryTemplate                    DeliveryTemplate?                              @relation(fields: [deliveryTemplateId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_7e3d9545a5a8ebea428fc0617b4")
+  ProductCategory                     ProductCategory?                               @relation(fields: [productCategoryId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_b0a36ee446b76f30303b077cd4e")
 }
 
 model Customer {
@@ -733,6 +741,7 @@ model Customer {
   RepairShopReview                                                          RepairShopReview[]
   Review                                                                    Review[]
   ReviewItem                                                                ReviewItem[]
+  ReviewUp                                                                  ReviewUp[]
   ShoppingBasket                                                            ShoppingBasket[]
   ValetReview                                                               ValetReview[]
   VehicleLog                                                                VehicleLog[]
@@ -784,7 +793,7 @@ model CustomerVehicle {
   rearTire                                                           String                                        @db.VarChar(20)
   truckType                                                          CustomerVehicle_trucktype_enum?
   customerVehicleOwner                                               String                                        @db.VarChar(150)
-  customerVehicleOwnerType                                           CustomerVehicle_customervehicleownertype_enum @default(dbgenerated("개인"))
+  customerVehicleOwnerType                                           CustomerVehicle_customervehicleownertype_enum @default(INDIVIDUAL)
   customerVehicleRemark                                              String?                                       @db.VarChar(100)
   trim                                                               String?                                       @db.VarChar(200)
   firstVehicleRegisteredAt                                           DateTime?                                     @db.Timestamptz(6)
@@ -1242,7 +1251,7 @@ model GoodsIssue {
   goodsIssueNo            String           @db.VarChar(100)
   destinationName         String           @db.VarChar(100)
   destinationRegionDepth1 String           @db.VarChar
-  destinationRegionDepth2 String           @db.VarChar
+  destinationRegionDepth2 String?          @db.VarChar
   destinationRegionDepth3 String?          @db.VarChar
   destinationZipCode      String           @db.VarChar
   destinationCountry      String?          @db.VarChar
@@ -1598,6 +1607,9 @@ model Order {
   clientType                    Order_clienttype_enum?
   customerId                    Int?
   reviewId                      Int?                   @unique(map: "REL_4bc4d2a4327869154a08cd7102")
+  externalOrderNo               String?                @db.VarChar(100)
+  happyCallState                String                 @default("NONE") @db.VarChar(20)
+  happyCallMemo                 String?                @db.VarChar(500)
   Customer                      Customer?              @relation(fields: [customerId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_0f88449168b8ffae36cb3f8a140")
   Review_Order_reviewIdToReview Review?                @relation("Order_reviewIdToReview", fields: [reviewId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_4bc4d2a4327869154a08cd71022")
   OrderItem                     OrderItem[]
@@ -2190,7 +2202,7 @@ model RepairShop {
   returnedReason                                                         String?                                  @db.VarChar(100)
   visitedCustomerCount                                                   Int                                      @default(0)
   repairShopType                                                         RepairShop_repairshoptype_enum?
-  repairShopFranchiseType                                                RepairShop_repairshopfranchisetype_enum? @default(dbgenerated("기타"))
+  repairShopFranchiseType                                                RepairShop_repairshopfranchisetype_enum? @default(ETC)
   subManagerPhoneList                                                    String[]                                 @db.VarChar
   repairShopLabel                                                        RepairShop_repairshoplabel_enum?
   updatedUserName                                                        String?                                  @db.VarChar(100)
@@ -2422,6 +2434,7 @@ model ReviewItem {
   customerId               Int?
   orderId                  Int?
   reviewType               ReviewLabel_reviewlabeltype_enum?
+  reviewWeight             Int                               @default(0)
   BatteryRushReview        BatteryRushReview?
   OrderItemReview          OrderItemReview?
   RepairShopReview         RepairShopReview?
@@ -2435,6 +2448,9 @@ model ReviewItem {
 
   @@index([reviewType], map: "IDX_ReviewItem_reviewType")
   @@index([viewableOnMain], map: "IDX_ReviewItem_viewableOnMain")
+  @@index([createdAt], map: "IDX_ReviewItem_createdAt")
+  @@index([reviewScore], map: "IDX_ReviewItem_reviewScore")
+  @@index([reviewWeight], map: "IDX_ReviewItem_reviewWeight")
 }
 
 model ReviewLabel {
@@ -3037,6 +3053,30 @@ model typeorm_metadata {
   @@ignore
 }
 
+model HappyCallStateLog {
+  id              Int            @id(map: "PK_HappyCallStateLog_id") @default(autoincrement())
+  createdAt       DateTime       @default(now()) @db.Timestamptz(6)
+  orderNo         String         @db.VarChar(100)
+  administratorId Int?
+  happyCallState  String         @db.VarChar(20)
+  happyCallMemo   String?        @db.VarChar(500)
+  Administrator   Administrator? @relation(fields: [administratorId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_HappyCallStateLog_administratorId")
+}
+
+model ReviewUp {
+  id           Int       @id(map: "PK_ReviewUp_id") @default(autoincrement())
+  createdAt    DateTime  @default(now()) @db.Timestamptz(6)
+  updatedAt    DateTime  @default(now()) @db.Timestamptz(6)
+  deletedAt    DateTime? @db.Timestamptz(6)
+  reviewUp     Boolean   @default(false)
+  reviewItemId Int
+  customerId   Int
+  addUpCnt     Int       @default(0)
+  Customer     Customer  @relation(fields: [customerId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_ReviewUp_customerId")
+
+  @@unique([reviewItemId, customerId], map: "UQ_ReviewUp_reviewItemId_customerId")
+}
+
 enum Administrator_administratorstatus_enum {
   activation
   dormancy
@@ -3168,20 +3208,20 @@ enum CustomerMarketingLog_marketingreceivabletype_enum {
 }
 
 enum CustomerVehicleMileageHistory_mileageinspectiontype_enum {
-  DIRECT_WRITING @map("직접 입력")
+  DIRECT_WRITING     @map("직접 입력")
   VEHICLE_INSPECTION @map("자동차 검사")
 }
 
 enum CustomerVehicle_customervehicleownertype_enum {
-  INDIVIDUAL @map("개인")
+  INDIVIDUAL  @map("개인")
   CORPORATION @map("법인")
-  RENTAL_CAR @map("렌터카")
+  RENTAL_CAR  @map("렌터카")
 }
 
 enum CustomerVehicle_trucktype_enum {
   HIGH_TOP @map("하이탑")
-  LOW_TOP @map("로우탑")
-  NOTHING @map("없음")
+  LOW_TOP  @map("로우탑")
+  NOTHING  @map("없음")
 }
 
 enum Customer_gender_enum {
@@ -3556,22 +3596,22 @@ enum RepairShopBusiness_businessdaytypes_enum {
 }
 
 enum RepairShopBusiness_repairshopholidayworkdays_enum {
-  NEW_YEAR_DAY @map("신정")
-  LUNAR_NEW_YEAR @map("설날연휴")
-  MARCH_ONE @map("삼일절")
-  CHILDREN_DAY @map("어린이날")
-  BUDDHA_BIRTHDAY @map("석가탄신일")
-  MEMORIAL_DAY @map("현충일")
+  NEW_YEAR_DAY            @map("신정")
+  LUNAR_NEW_YEAR          @map("설날연휴")
+  MARCH_ONE               @map("삼일절")
+  CHILDREN_DAY            @map("어린이날")
+  BUDDHA_BIRTHDAY         @map("석가탄신일")
+  MEMORIAL_DAY            @map("현충일")
   NATIONAL_LIBERATION_DAY @map("광복절")
-  CHUSEOK @map("추석연휴")
-  GAECHEONJEOL @map("개천절")
-  HANGUL_DAY @map("한글날")
-  CHRIST_MAS @map("성탄절")
+  CHUSEOK                 @map("추석연휴")
+  GAECHEONJEOL            @map("개천절")
+  HANGUL_DAY              @map("한글날")
+  CHRIST_MAS              @map("성탄절")
 }
 
 enum RepairShopBusiness_reservationinterval_enum {
-  THIRTY @map("30")
-  SIXTY @map("60")
+  THIRTY             @map("30")
+  SIXTY              @map("60")
   ONE_HUNDRED_TWENTY @map("120")
   ONE_HUNDRED_EIGHTY @map("180")
 }
@@ -3588,17 +3628,17 @@ enum RepairShopDayOff_dayoffday_enum {
 }
 
 enum RepairShopDayOff_dayoffweek_enum {
-  ONE @map("1")
-  TWO @map("2")
-  THREE @map("3")
-  FOUR @map("4")
-  FIVE @map("5")
+  ONE        @map("1")
+  TWO        @map("2")
+  THREE      @map("3")
+  FOUR       @map("4")
+  FIVE       @map("5")
   EVERY_WEEK
 }
 
 enum RepairShopMedia_type_enum {
-  ALL @map("전체")
-  FRONT @map("정면")
+  ALL    @map("전체")
+  FRONT  @map("정면")
   INSIDE @map("내부")
 }
 
@@ -3612,8 +3652,8 @@ enum RepairShopTemporaryBusiness_temporarybusinesstype_enum {
 }
 
 enum RepairShop_repairshopfranchisetype_enum {
-  GS @map("GS엠비즈")
-  SM @map("스피드메이트")
+  GS  @map("GS엠비즈")
+  SM  @map("스피드메이트")
   ETC @map("기타")
 }
 
@@ -3622,20 +3662,20 @@ enum RepairShop_repairshoplabel_enum {
 }
 
 enum RepairShop_repairshopstatustype_enum {
-  OPERATION @map("운영")
-  NON_OPERATION @map("미운영")
+  OPERATION         @map("운영")
+  NON_OPERATION     @map("미운영")
   OPERATION_WAITING @map("운영대기")
-  APPLICATION @map("제휴 신청")
-  APPROVAL @map("제휴 승인")
-  RETURN @map("제휴 반려")
-  CANCEL @map("신청 취소")
-  END @map("제휴 종료")
+  APPLICATION       @map("제휴 신청")
+  APPROVAL          @map("제휴 승인")
+  RETURN            @map("제휴 반려")
+  CANCEL            @map("신청 취소")
+  END               @map("제휴 종료")
 }
 
 enum RepairShop_repairshoptype_enum {
-  INDEPENDENCY @map("독립")
+  INDEPENDENCY   @map("독립")
   SIDE_ESTABLISH @map("병설")
-  OUT_SIDE @map("외부")
+  OUT_SIDE       @map("외부")
   DISCOUNT_STORE @map("할인점")
 }
 
@@ -3782,4 +3822,10 @@ enum WithdrawalCustomer_service_enum {
   REPAIR_SHOP_WEB
   WASH_WEB
   VENDOR_WEB
+}
+
+enum CouponTemplate_couponbenefitdisplaytypes_enum {
+  NONE
+  CALCULATE_PRICE
+  TEXT
 }
