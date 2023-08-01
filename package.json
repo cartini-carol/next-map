@@ -2,7 +2,7 @@
   "name": "next-map",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://carol.dev",
+  "homepage": "https://cartini-carol.github.io/next-map/",
   "scripts": {
     "dev": "next dev",
     "build": "next build && next export",
