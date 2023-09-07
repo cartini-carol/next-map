@@ -35,14 +35,16 @@ export const StatisticsOverlay: FunctionComponent<StatisticsOverlayProps> = ({
       ref={ref}
       className="absolute bg-white shadow-current text-black px-3 py-3 w-48 rounded-sm"
     >
-      {Object.entries(Franchise).map(([k, v]) => (
-        <div key={k} className="flex">
-          <span className="text-stone-800 flex-[2_2_0%]">{v}</span>
-          <span className="font-semibold flex-none text-right">
-            {info ? info[k as FranchiseType] : 0 || 0}
-          </span>
-        </div>
-      ))}
+      {Object.entries(Franchise)
+        .filter(([k]) => info && info[k as FranchiseType])
+        .map(([k, v]) => (
+          <div key={k} className="flex">
+            <span className="text-stone-800 flex-[2_2_0%]">{v}</span>
+            <span className="font-semibold flex-none text-right">
+              {info ? info[k as FranchiseType] : 0 || 0}
+            </span>
+          </div>
+        ))}
     </section>
   );
 };

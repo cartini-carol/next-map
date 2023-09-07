@@ -20,7 +20,7 @@ export default function RootLayout({
       <body className={inter.className}>
         <div className="relative w-screen h-screen box-border flex flex-col">
           <NextAuthProvider>
-            <Headers />
+            {/* <Headers /> */}
             {children}
           </NextAuthProvider>
         </div>
