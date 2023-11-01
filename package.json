@@ -11,7 +11,7 @@
     "deploy": "rm -rf node_modules/.cache && next build && next export && touch out/.nojekyll && git add out/ && git commit -m \"Deploy Next.js to gh-pages\" && git subtree push --prefix out origin gh-pages"
   },
   "dependencies": {
-    "@prisma/client": "^4.16.1",
+    "@prisma/client": "^5.5.2",
     "@types/node": "20.1.5",
     "@types/ol": "^7.0.0",
     "@types/react": "18.2.6",

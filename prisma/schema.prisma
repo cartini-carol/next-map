@@ -101,30 +101,41 @@ model Address {
 }
 
 model Administrator {
-  id                                        Int                                    @id(map: "PK_d65ebbc8de33ec40b49f0129ede") @default(autoincrement())
-  createdAt                                 DateTime                               @default(now()) @db.Timestamptz(6)
-  updatedAt                                 DateTime                               @default(now()) @db.Timestamptz(6)
-  deletedAt                                 DateTime?                              @db.Timestamptz(6)
-  administratorAId                          String                                 @db.VarChar(200)
-  administratorName                         String                                 @db.VarChar(100)
-  administratorEmail                        String                                 @db.VarChar(200)
-  administratorPhone                        String?                                @db.VarChar(20)
-  administratorStatus                       Administrator_administratorstatus_enum @default(activation)
-  administratorRemark                       String?                                @db.VarChar(100)
-  accountId                                 Int                                    @unique(map: "REL_8a850d6a19feb0ddddc5d3daae")
-  bosRoleId                                 Int?
-  Account                                   Account                                @relation(fields: [accountId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_8a850d6a19feb0ddddc5d3daaee")
-  BosRole_Administrator_bosRoleIdToBosRole  BosRole?                               @relation("Administrator_bosRoleIdToBosRole", fields: [bosRoleId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_f07a0491593e686378533866a69")
-  AppVersion                                AppVersion[]
-  BosRole_BosRole_editorIdToAdministrator   BosRole[]                              @relation("BosRole_editorIdToAdministrator")
-  BosRole_BosRole_registerIdToAdministrator BosRole[]                              @relation("BosRole_registerIdToAdministrator")
-  Event_Event_registerIdToAdministrator     Event[]                                @relation("Event_registerIdToAdministrator")
-  Event_Event_editorIdToAdministrator       Event[]                                @relation("Event_editorIdToAdministrator")
-  Faq                                       Faq[]
-  HappyCallStateLog                         HappyCallStateLog[]
-  Notice                                    Notice[]
-  ProductPriceBulk                          ProductPriceBulk[]
-  Transaction                               Transaction[]
+  id                                                                  Int                                    @id(map: "PK_d65ebbc8de33ec40b49f0129ede") @default(autoincrement())
+  createdAt                                                           DateTime                               @default(now()) @db.Timestamptz(6)
+  updatedAt                                                           DateTime                               @default(now()) @db.Timestamptz(6)
+  deletedAt                                                           DateTime?                              @db.Timestamptz(6)
+  administratorAId                                                    String                                 @db.VarChar(200)
+  administratorName                                                   String                                 @db.VarChar(100)
+  administratorEmail                                                  String                                 @db.VarChar(200)
+  administratorPhone                                                  String?                                @db.VarChar(20)
+  administratorStatus                                                 Administrator_administratorstatus_enum @default(activation)
+  administratorRemark                                                 String?                                @db.VarChar(100)
+  accountId                                                           Int                                    @unique(map: "REL_8a850d6a19feb0ddddc5d3daae")
+  bosRoleId                                                           Int?
+  Account                                                             Account                                @relation(fields: [accountId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_8a850d6a19feb0ddddc5d3daaee")
+  BosRole_Administrator_bosRoleIdToBosRole                            BosRole?                               @relation("Administrator_bosRoleIdToBosRole", fields: [bosRoleId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_f07a0491593e686378533866a69")
+  AppVersion                                                          AppVersion[]
+  BosRole_BosRole_editorIdToAdministrator                             BosRole[]                              @relation("BosRole_editorIdToAdministrator")
+  BosRole_BosRole_registerIdToAdministrator                           BosRole[]                              @relation("BosRole_registerIdToAdministrator")
+  CouponCode_CouponCode_createdAdministratorIdToAdministrator         CouponCode[]                           @relation("CouponCode_createdAdministratorIdToAdministrator")
+  CouponCode_CouponCode_updatedAdministratorIdToAdministrator         CouponCode[]                           @relation("CouponCode_updatedAdministratorIdToAdministrator")
+  CouponTemplate_CouponTemplate_createdAdministratorIdToAdministrator CouponTemplate[]                       @relation("CouponTemplate_createdAdministratorIdToAdministrator")
+  CouponTemplate_CouponTemplate_updatedAdministratorIdToAdministrator CouponTemplate[]                       @relation("CouponTemplate_updatedAdministratorIdToAdministrator")
+  Event_Event_registerIdToAdministrator                               Event[]                                @relation("Event_registerIdToAdministrator")
+  Event_Event_editorIdToAdministrator                                 Event[]                                @relation("Event_editorIdToAdministrator")
+  Faq                                                                 Faq[]
+  HappyCallStateLog                                                   HappyCallStateLog[]
+  Notice                                                              Notice[]
+  PointPolicy_PointPolicy_createdAdministratorIdToAdministrator       PointPolicy[]                          @relation("PointPolicy_createdAdministratorIdToAdministrator")
+  PointPolicy_PointPolicy_updatedAdministratorIdToAdministrator       PointPolicy[]                          @relation("PointPolicy_updatedAdministratorIdToAdministrator")
+  PointTransaction                                                    PointTransaction[]
+  ProductPriceBulk                                                    ProductPriceBulk[]
+  Promotion_Promotion_createdAdministratorIdToAdministrator           Promotion[]                            @relation("Promotion_createdAdministratorIdToAdministrator")
+  Promotion_Promotion_updatedAdministratorIdToAdministrator           Promotion[]                            @relation("Promotion_updatedAdministratorIdToAdministrator")
+  Transaction                                                         Transaction[]
+  Voucher_Voucher_createdAdministratorIdToAdministrator               Voucher[]                              @relation("Voucher_createdAdministratorIdToAdministrator")
+  Voucher_Voucher_updatedAdministratorIdToAdministrator               Voucher[]                              @relation("Voucher_updatedAdministratorIdToAdministrator")
 
   @@index([administratorName], map: "IDX_7a44b001bc905d559050e54b64")
   @@index([administratorEmail], map: "IDX_dd9f5303977def831694d35d72")
@@ -263,17 +274,32 @@ model AuthToken {
 }
 
 model Banner {
-  id        Int       @id(map: "PK_f4f83041fd483ae9faa35d13c9f") @default(autoincrement())
-  createdAt DateTime  @default(now()) @db.Timestamptz(6)
-  updatedAt DateTime  @default(now()) @db.Timestamptz(6)
-  deletedAt DateTime? @db.Timestamptz(6)
-  location  String    @db.VarChar(100)
-  viewable  Boolean   @default(true)
-  link      String?   @db.VarChar(1000)
-  mediaId   Int       @unique(map: "REL_d359b6924d823dbdd544d395c4")
-  eventId   Int?
-  Event     Event?    @relation(fields: [eventId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_06579edbfe9cae2c071fa0c3035")
-  Media     Media     @relation(fields: [mediaId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_d359b6924d823dbdd544d395c40")
+  id                     Int       @id(map: "PK_Banner_id") @default(autoincrement())
+  createdAt              DateTime  @default(now()) @db.Timestamptz(6)
+  updatedAt              DateTime  @default(now()) @db.Timestamptz(6)
+  deletedAt              DateTime? @db.Timestamptz(6)
+  adminTitle             String    @db.VarChar(200)
+  isOperating            Boolean   @default(false)
+  startedAt              DateTime  @db.Timestamptz(6)
+  endedAt                DateTime  @db.Timestamptz(6)
+  platform               String    @db.VarChar(50)
+  position               String    @db.VarChar(200)
+  sortNumber             Int       @default(0)
+  landingType            String    @db.VarChar(100)
+  landingPage            String?   @db.VarChar(100)
+  landingLink            String?   @db.VarChar(1000)
+  landingLinkApp         String?   @db.VarChar(1000)
+  mediaId                Int
+  bannerName             String    @db.VarChar(200)
+  createdAdministratorId Int?
+  updatedAdministratorId Int?
+  Media                  Media     @relation(fields: [mediaId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_d359b6924d823dbdd544d395c40")
+
+  @@index([adminTitle], map: "IDX_Banner_adminTitle")
+  @@index([endedAt], map: "IDX_Banner_endDate")
+  @@index([isOperating], map: "IDX_Banner_isOperating")
+  @@index([position], map: "IDX_Banner_position")
+  @@index([startedAt], map: "IDX_Banner_startDate")
 }
 
 model BatchLock {
@@ -588,7 +614,7 @@ model Coupon {
   isWeb               Boolean?
   fromAvailabledAt    DateTime               @db.Timestamptz(6)
   toAvailabledAt      DateTime               @db.Timestamptz(6)
-  couponTemplateJson  Json                   @db.Json
+  couponTemplateJson  Json?                  @db.Json
   distributePriceJson Json?                  @db.Json
   customerId          Int?
   couponTemplateId    Int?
@@ -596,6 +622,7 @@ model Coupon {
   memo                String?                @db.VarChar(300)
   CouponTemplate      CouponTemplate?        @relation(fields: [couponTemplateId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_2647d688930206e7257cb14fa69")
   Customer            Customer?              @relation(fields: [customerId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_30b03baafaf0e6e325a841f33eb")
+  CouponHistory       CouponHistory[]
 
   @@index([orderNo], map: "IDX_6e1be602239ec9870ccdaea6ad")
   @@index([couponTemplateId], map: "coupon_coupontemplateid_idx")
@@ -608,6 +635,7 @@ model CouponApplyProductOption {
   deletedAt        DateTime?      @db.Timestamptz(6)
   couponTemplateId Int
   productOptionId  Int
+  isValidated      Boolean?
   CouponTemplate   CouponTemplate @relation(fields: [couponTemplateId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_15ddf70a95653f09c97f86a4a2b")
   ProductOption    ProductOption  @relation(fields: [productOptionId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_2b63ee233c1162fd240f582e0c0")
 
@@ -615,18 +643,23 @@ model CouponApplyProductOption {
 }
 
 model CouponCode {
-  id                 Int             @id(map: "PK_3db236cd08d5ad138f757e589e4") @default(autoincrement())
-  createdAt          DateTime        @default(now()) @db.Timestamptz(6)
-  updatedAt          DateTime        @default(now()) @db.Timestamptz(6)
-  deletedAt          DateTime?       @db.Timestamptz(6)
-  couponCode         String          @unique(map: "unique_coupon_code") @db.VarChar(100)
-  isAllowDuplication Boolean?        @default(false)
-  assignedAt         DateTime?       @db.Timestamptz(6)
-  registeredAt       DateTime?       @db.Timestamptz(6)
-  eventId            Int?
-  couponTemplateId   Int?
-  CouponTemplate     CouponTemplate? @relation(fields: [couponTemplateId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_4b08e30436d94de16b679402177")
-  Event              Event?          @relation(fields: [eventId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_f65c5ee897ff7a13aae9b227ad2")
+  id                                                             Int             @id(map: "PK_3db236cd08d5ad138f757e589e4") @default(autoincrement())
+  createdAt                                                      DateTime        @default(now()) @db.Timestamptz(6)
+  updatedAt                                                      DateTime        @default(now()) @db.Timestamptz(6)
+  deletedAt                                                      DateTime?       @db.Timestamptz(6)
+  couponCode                                                     String          @unique(map: "unique_coupon_code") @db.VarChar(100)
+  isAllowDuplication                                             Boolean?        @default(false)
+  assignedAt                                                     DateTime?       @db.Timestamptz(6)
+  registeredAt                                                   DateTime?       @db.Timestamptz(6)
+  eventId                                                        Int?
+  couponTemplateId                                               Int?
+  updatedAdministratorId                                         Int?
+  createdAdministratorId                                         Int?
+  couponTemplateIds                                              Int[]
+  CouponTemplate                                                 CouponTemplate? @relation(fields: [couponTemplateId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_4b08e30436d94de16b679402177")
+  Administrator_CouponCode_createdAdministratorIdToAdministrator Administrator?  @relation("CouponCode_createdAdministratorIdToAdministrator", fields: [createdAdministratorId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_CouponTemplate_createdAdministratorId")
+  Administrator_CouponCode_updatedAdministratorIdToAdministrator Administrator?  @relation("CouponCode_updatedAdministratorIdToAdministrator", fields: [updatedAdministratorId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_CouponTemplate_updatedAdministratorId")
+  Event                                                          Event?          @relation(fields: [eventId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_f65c5ee897ff7a13aae9b227ad2")
 }
 
 model CouponDiscountAssignedProductOption {
@@ -641,55 +674,60 @@ model CouponDiscountAssignedProductOption {
 }
 
 model CouponTemplate {
-  id                                  Int                                            @id(map: "PK_5ab5b04a85a03688bdb36faf311") @default(autoincrement())
-  createdAt                           DateTime                                       @default(now()) @db.Timestamptz(6)
-  updatedAt                           DateTime                                       @default(now()) @db.Timestamptz(6)
-  deletedAt                           DateTime?                                      @db.Timestamptz(6)
-  couponName                          String                                         @unique(map: "couponTemplate") @db.VarChar(100)
-  couponType                          CouponTemplate_coupontype_enum
-  couponTargetServices                CouponTemplate_coupontargetservices_enum[]
-  isShowCouponIssueButton             Boolean?
-  isShowCouponPrice                   Boolean?
-  isAllowIsolateDelivery              Boolean?
-  isOnlyApp                           Boolean?
-  isUnitDiscount                      Boolean?
-  productDetailPageText               String?                                        @db.VarChar(100)
-  isOperating                         Boolean
-  isExposure                          Boolean                                        @default(false)
-  isAllowDuplication                  Boolean?
-  couponDiscountMethod                CouponTemplate_coupondiscountmethod_enum
-  discountPrice                       Int?
-  discountRate                        Int?
-  fixedPrice                          Int?
-  fromIssuedAt                        DateTime                                       @db.Timestamptz(6)
-  toIssuedAt                          DateTime                                       @db.Timestamptz(6)
-  availableType                       CouponTemplate_availabletype_enum
-  fromAvailabledAt                    DateTime?                                      @db.Timestamptz(6)
-  toAvailabledAt                      DateTime?                                      @db.Timestamptz(6)
-  availablePeriod                     Int?
-  couponMinPriceType                  CouponTemplate_couponminpricetype_enum?
-  minPrice                            Int?
-  minAmount                           Int?
-  maxAmount                           Int?
-  maxDiscountPrice                    Int?
-  maxIssuedAmount                     Int?
-  paymentMethods                      CouponTemplate_paymentmethods_enum[]
-  paymentCards                        Json?
-  createdUserName                     String?                                        @db.VarChar(100)
-  updatedUserName                     String?                                        @db.VarChar(100)
-  deliveryTemplateId                  Int?
-  productCategoryId                   Int?
-  memo                                String?                                        @db.VarChar(300)
-  availableChannels                   String[]                                       @db.VarChar
-  productDetailPageBenefitDisplay     CouponTemplate_couponbenefitdisplaytypes_enum?
-  productListPageBenefitDisplay       CouponTemplate_couponbenefitdisplaytypes_enum?
-  productListPageText                 String?                                        @db.VarChar(100)
-  Coupon                              Coupon[]
-  CouponApplyProductOption            CouponApplyProductOption[]
-  CouponCode                          CouponCode[]
-  CouponDiscountAssignedProductOption CouponDiscountAssignedProductOption[]
-  DeliveryTemplate                    DeliveryTemplate?                              @relation(fields: [deliveryTemplateId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_7e3d9545a5a8ebea428fc0617b4")
-  ProductCategory                     ProductCategory?                               @relation(fields: [productCategoryId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_b0a36ee446b76f30303b077cd4e")
+  id                                                                 Int                                            @id(map: "PK_5ab5b04a85a03688bdb36faf311") @default(autoincrement())
+  createdAt                                                          DateTime                                       @default(now()) @db.Timestamptz(6)
+  updatedAt                                                          DateTime                                       @default(now()) @db.Timestamptz(6)
+  deletedAt                                                          DateTime?                                      @db.Timestamptz(6)
+  couponName                                                         String                                         @unique(map: "couponTemplate") @db.VarChar(100)
+  couponType                                                         CouponTemplate_coupontype_enum
+  couponTargetServices                                               CouponTemplate_coupontargetservices_enum[]
+  isShowCouponIssueButton                                            Boolean?
+  isShowCouponPrice                                                  Boolean?
+  isAllowIsolateDelivery                                             Boolean?
+  isOnlyApp                                                          Boolean?
+  isUnitDiscount                                                     Boolean?
+  productDetailPageText                                              String?                                        @db.VarChar(100)
+  isOperating                                                        Boolean
+  isExposure                                                         Boolean                                        @default(false)
+  isAllowDuplication                                                 Boolean?
+  couponDiscountMethod                                               CouponTemplate_coupondiscountmethod_enum
+  discountPrice                                                      Int?
+  discountRate                                                       Int?
+  fixedPrice                                                         Int?
+  fromIssuedAt                                                       DateTime                                       @db.Timestamptz(6)
+  toIssuedAt                                                         DateTime                                       @db.Timestamptz(6)
+  availableType                                                      CouponTemplate_availabletype_enum
+  fromAvailabledAt                                                   DateTime?                                      @db.Timestamptz(6)
+  toAvailabledAt                                                     DateTime?                                      @db.Timestamptz(6)
+  availablePeriod                                                    Int?
+  couponMinPriceType                                                 CouponTemplate_couponminpricetype_enum?
+  minPrice                                                           Int?
+  minAmount                                                          Int?
+  maxAmount                                                          Int?
+  maxDiscountPrice                                                   Int?
+  maxIssuedAmount                                                    Int?
+  paymentMethods                                                     CouponTemplate_paymentmethods_enum[]
+  paymentCards                                                       Json?
+  createdUserName                                                    String?                                        @db.VarChar(100)
+  updatedUserName                                                    String?                                        @db.VarChar(100)
+  deliveryTemplateId                                                 Int?
+  productCategoryId                                                  Int?
+  memo                                                               String?                                        @db.VarChar(300)
+  availableChannels                                                  String[]                                       @db.VarChar
+  productDetailPageBenefitDisplay                                    CouponTemplate_couponbenefitdisplaytypes_enum?
+  productListPageBenefitDisplay                                      CouponTemplate_couponbenefitdisplaytypes_enum?
+  productListPageText                                                String?                                        @db.VarChar(100)
+  updatedAdministratorId                                             Int?
+  createdAdministratorId                                             Int?
+  Coupon                                                             Coupon[]
+  CouponApplyProductOption                                           CouponApplyProductOption[]
+  CouponCode                                                         CouponCode[]
+  CouponDiscountAssignedProductOption                                CouponDiscountAssignedProductOption[]
+  DeliveryTemplate                                                   DeliveryTemplate?                              @relation(fields: [deliveryTemplateId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_7e3d9545a5a8ebea428fc0617b4")
+  Administrator_CouponTemplate_createdAdministratorIdToAdministrator Administrator?                                 @relation("CouponTemplate_createdAdministratorIdToAdministrator", fields: [createdAdministratorId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_CouponTemplate_createdAdministratorId")
+  Administrator_CouponTemplate_updatedAdministratorIdToAdministrator Administrator?                                 @relation("CouponTemplate_updatedAdministratorIdToAdministrator", fields: [updatedAdministratorId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_CouponTemplate_updatedAdministratorId")
+  ProductCategory                                                    ProductCategory?                               @relation(fields: [productCategoryId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_b0a36ee446b76f30303b077cd4e")
+  CouponTemplateVerifyOption                                         CouponTemplateVerifyOption[]
 }
 
 model Customer {
@@ -733,8 +771,11 @@ model Customer {
   GiftyshowHistory                                                          GiftyshowHistory[]
   Inquiry                                                                   Inquiry[]
   OfflineCoupon                                                             OfflineCoupon[]
+  OnSiteReview                                                              OnSiteReview[]
   Order                                                                     Order[]
   OrderItemReview                                                           OrderItemReview[]
+  PointTransaction                                                          PointTransaction[]
+  PointTransactionDetail                                                    PointTransactionDetail[]
   Recommendation_Recommendation_recommenderCustomerIdToCustomer             Recommendation[]           @relation("Recommendation_recommenderCustomerIdToCustomer")
   Recommendation_Recommendation_recommendationCustomerIdToCustomer          Recommendation[]           @relation("Recommendation_recommendationCustomerIdToCustomer")
   Repair                                                                    Repair[]
@@ -891,7 +932,7 @@ model Delivery {
   senderRegionDepth3   String?                        @db.VarChar(100)
   senderZipCode        String?                        @db.VarChar(5)
   senderCountry        String?                        @db.VarChar(2)
-  senderDetail         String?                        @db.VarChar(50)
+  senderDetail         String?                        @db.VarChar(500)
   senderStreet         String?                        @db.VarChar(100)
   senderZibun          String?                        @db.VarChar(100)
   receiverRegionDepth1 String?                        @db.VarChar(100)
@@ -899,7 +940,7 @@ model Delivery {
   receiverRegionDepth3 String?                        @db.VarChar(100)
   receiverZipCode      String?                        @db.VarChar(5)
   receiverCountry      String?                        @db.VarChar(2)
-  receiverDetail       String?                        @db.VarChar(50)
+  receiverDetail       String?                        @db.VarChar(500)
   receiverStreet       String?                        @db.VarChar(100)
   receiverZibun        String?                        @db.VarChar(100)
   deliveryType         Delivery_deliverytype_enum
@@ -1179,7 +1220,6 @@ model Event {
   editorId                                      Int?
   eventBannerMediaId                            Int?           @unique(map: "REL_e41644a927a709816f36bb6e12")
   notice                                        String?        @db.VarChar(2000)
-  Banner                                        Banner[]
   CouponCode                                    CouponCode[]
   Administrator_Event_registerIdToAdministrator Administrator  @relation("Event_registerIdToAdministrator", fields: [registerId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_66c7f91d507c2a109b57bf0c652")
   Administrator_Event_editorIdToAdministrator   Administrator? @relation("Event_editorIdToAdministrator", fields: [editorId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_d64394134f7083001033f834b5e")
@@ -1468,36 +1508,39 @@ model IsolateAreaValet {
 }
 
 model Media {
-  id                                                                          Int                  @id(map: "PK_d6faa9c3e688a5d2b80d9bfdeb6") @default(autoincrement())
-  createdAt                                                                   DateTime             @default(now()) @db.Timestamptz(6)
-  updatedAt                                                                   DateTime             @default(now()) @db.Timestamptz(6)
-  service                                                                     String               @default("default-app") @db.VarChar
-  authorId                                                                    String?              @db.VarChar(100)
-  type                                                                        Media_type_enum
-  format                                                                      String               @db.VarChar(20)
-  fileName                                                                    String               @db.VarChar(100)
-  originName                                                                  String               @db.VarChar(200)
-  folder                                                                      String               @default("storage") @db.VarChar(100)
-  Banner                                                                      Banner?
-  CardBenefit                                                                 CardBenefit[]
-  CatalogBrand                                                                CatalogBrand[]
-  Event                                                                       Event?
-  InquiryMedia                                                                InquiryMedia[]
-  Product                                                                     Product[]
-  ProductBrand_ProductBrand_productBrandMediaIdToMedia                        ProductBrand[]       @relation("ProductBrand_productBrandMediaIdToMedia")
-  ProductBrand_ProductBrand_mobileLargeProductBrandMediaIdToMedia             ProductBrand[]       @relation("ProductBrand_mobileLargeProductBrandMediaIdToMedia")
-  ProductBrand_ProductBrand_largeProductBrandMediaIdToMedia                   ProductBrand[]       @relation("ProductBrand_largeProductBrandMediaIdToMedia")
-  ProductBrand_ProductBrand_middleProductBrandMediaIdToMedia                  ProductBrand[]       @relation("ProductBrand_middleProductBrandMediaIdToMedia")
-  ProductMedia                                                                ProductMedia[]
-  Promotion_Promotion_displayMediaIdToMedia                                   Promotion[]          @relation("Promotion_displayMediaIdToMedia")
-  Promotion_Promotion_promotionShareMediaIdToMedia                            Promotion[]          @relation("Promotion_promotionShareMediaIdToMedia")
-  Promotion_Promotion_promotionMediaIdToMedia                                 Promotion[]          @relation("Promotion_promotionMediaIdToMedia")
-  RepairShop                                                                  RepairShop?
-  RepairShopMedia                                                             RepairShopMedia[]
-  ReviewMedia                                                                 ReviewMedia[]
-  VehicleBrand                                                                VehicleBrand?
-  VehicleWashStation_VehicleWashStation_vehicleWashStationBrandMediaIdToMedia VehicleWashStation[] @relation("VehicleWashStation_vehicleWashStationBrandMediaIdToMedia")
-  VehicleWashStation_VehicleWashStation_markerMediaIdToMedia                  VehicleWashStation[] @relation("VehicleWashStation_markerMediaIdToMedia")
+  id                                                                           Int                     @id(map: "PK_d6faa9c3e688a5d2b80d9bfdeb6") @default(autoincrement())
+  createdAt                                                                    DateTime                @default(now()) @db.Timestamptz(6)
+  updatedAt                                                                    DateTime                @default(now()) @db.Timestamptz(6)
+  service                                                                      String                  @default("default-app") @db.VarChar
+  authorId                                                                     String?                 @db.VarChar(100)
+  type                                                                         Media_type_enum
+  format                                                                       String                  @db.VarChar(20)
+  fileName                                                                     String                  @db.VarChar(100)
+  originName                                                                   String                  @db.VarChar(200)
+  folder                                                                       String                  @default("storage") @db.VarChar(100)
+  Banner                                                                       Banner[]
+  CardBenefit                                                                  CardBenefit[]
+  CatalogBrand                                                                 CatalogBrand[]
+  Event                                                                        Event?
+  InquiryMedia                                                                 InquiryMedia[]
+  Product                                                                      Product[]
+  ProductBrand_ProductBrand_productBrandMediaIdToMedia                         ProductBrand[]          @relation("ProductBrand_productBrandMediaIdToMedia")
+  ProductBrand_ProductBrand_mobileLargeProductBrandMediaIdToMedia              ProductBrand[]          @relation("ProductBrand_mobileLargeProductBrandMediaIdToMedia")
+  ProductBrand_ProductBrand_largeProductBrandMediaIdToMedia                    ProductBrand[]          @relation("ProductBrand_largeProductBrandMediaIdToMedia")
+  ProductBrand_ProductBrand_middleProductBrandMediaIdToMedia                   ProductBrand[]          @relation("ProductBrand_middleProductBrandMediaIdToMedia")
+  ProductMedia                                                                 ProductMedia[]
+  Promotion_Promotion_displayMediaIdToMedia                                    Promotion[]             @relation("Promotion_displayMediaIdToMedia")
+  Promotion_Promotion_promotionShareMediaIdToMedia                             Promotion[]             @relation("Promotion_promotionShareMediaIdToMedia")
+  Promotion_Promotion_promotionMediaIdToMedia                                  Promotion[]             @relation("Promotion_promotionMediaIdToMedia")
+  Promotion_Promotion_promotionMobileMediaIdToMedia                            Promotion[]             @relation("Promotion_promotionMobileMediaIdToMedia")
+  PromotionProductGroup_PromotionProductGroup_productGroupMediaIdToMedia       PromotionProductGroup[] @relation("PromotionProductGroup_productGroupMediaIdToMedia")
+  PromotionProductGroup_PromotionProductGroup_productGroupMobileMediaIdToMedia PromotionProductGroup[] @relation("PromotionProductGroup_productGroupMobileMediaIdToMedia")
+  RepairShop                                                                   RepairShop?
+  RepairShopMedia                                                              RepairShopMedia[]
+  ReviewMedia                                                                  ReviewMedia[]
+  VehicleBrand                                                                 VehicleBrand?
+  VehicleWashStation_VehicleWashStation_vehicleWashStationBrandMediaIdToMedia  VehicleWashStation[]    @relation("VehicleWashStation_vehicleWashStationBrandMediaIdToMedia")
+  VehicleWashStation_VehicleWashStation_markerMediaIdToMedia                   VehicleWashStation[]    @relation("VehicleWashStation_markerMediaIdToMedia")
 }
 
 model NonValetRegion {
@@ -1509,23 +1552,26 @@ model NonValetRegion {
 }
 
 model Notice {
-  id                      Int           @id(map: "PK_44206eb3b3de13382471d701b93") @default(autoincrement())
-  createdAt               DateTime      @default(now()) @db.Timestamptz(6)
-  updatedAt               DateTime      @default(now()) @db.Timestamptz(6)
-  deletedAt               DateTime?     @db.Timestamptz(6)
-  service                 String        @db.VarChar(100)
+  id                      Int             @id(map: "PK_44206eb3b3de13382471d701b93") @default(autoincrement())
+  createdAt               DateTime        @default(now()) @db.Timestamptz(6)
+  updatedAt               DateTime        @default(now()) @db.Timestamptz(6)
+  deletedAt               DateTime?       @db.Timestamptz(6)
+  service                 String          @db.VarChar(100)
   viewable                Boolean
-  bannerViewable          Boolean       @default(false)
-  title                   String        @db.VarChar(200)
-  body                    String        @db.VarChar(1000000)
+  bannerViewable          Boolean         @default(false)
+  title                   String          @db.VarChar(200)
+  body                    String          @db.VarChar(1000000)
   administratorId         Int
-  isPopupExposure         Boolean       @default(false)
-  startedAt               DateTime?     @db.Timestamptz(6)
-  endedAt                 DateTime?     @db.Timestamptz(6)
-  popupExposureStartedAt  DateTime?     @db.Timestamptz(6)
-  popupExposureEndedAt    DateTime?     @db.Timestamptz(6)
+  isPopupExposure         Boolean         @default(false)
+  startedAt               DateTime?       @db.Timestamptz(6)
+  endedAt                 DateTime?       @db.Timestamptz(6)
+  popupExposureStartedAt  DateTime?       @db.Timestamptz(6)
+  popupExposureEndedAt    DateTime?       @db.Timestamptz(6)
   popupExposureSortNumber Int?
-  Administrator           Administrator @relation(fields: [administratorId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_3c51a94da77b060f980f299a75e")
+  isSurvey                Boolean?
+  assignedRepairShopIds   Int[]
+  Administrator           Administrator   @relation(fields: [administratorId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_3c51a94da77b060f980f299a75e")
+  NoticeHistory           NoticeHistory[]
 
   @@index([viewable], map: "IDX_006ac8779cd5d3d50f63d3adc7")
   @@index([createdAt], map: "IDX_0679869f55a09ed556783b8faa")
@@ -1610,6 +1656,7 @@ model Order {
   externalOrderNo               String?                @db.VarChar(100)
   happyCallState                String                 @default("NONE") @db.VarChar(20)
   happyCallMemo                 String?                @db.VarChar(500)
+  pointAmount                   Int?
   Customer                      Customer?              @relation(fields: [customerId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_0f88449168b8ffae36cb3f8a140")
   Review_Order_reviewIdToReview Review?                @relation("Order_reviewIdToReview", fields: [reviewId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_4bc4d2a4327869154a08cd71022")
   OrderItem                     OrderItem[]
@@ -1760,51 +1807,53 @@ model Payment {
 }
 
 model Product {
-  id                    Int                             @id(map: "PK_9fc040db7872192bbc26c515710") @default(autoincrement())
-  createdAt             DateTime                        @default(now()) @db.Timestamptz(6)
-  updatedAt             DateTime                        @default(now()) @db.Timestamptz(6)
-  deletedAt             DateTime?                       @db.Timestamptz(6)
-  productName           String                          @db.VarChar(100)
-  productModelNo        String                          @db.VarChar(100)
-  productExposureTags   String[]                        @db.VarChar(100)
-  productCompany        String                          @db.VarChar(100)
-  productOrigin         String?                         @db.VarChar(100)
-  madeAt                String?                         @db.VarChar(200)
-  expiredAt             String?                         @db.VarChar(200)
-  productIntroduction   String                          @db.VarChar(200)
-  kcMarkNo              String?                         @db.VarChar(200)
-  productBadge          Product_productbadge_enum?
-  taxType               Product_taxtype_enum
-  salePrice             Int
-  discountRate          Int?
-  exposurePrice         Int?
-  productStockCheckable Boolean                         @default(true)
-  isSoldOut             Boolean                         @default(false)
-  productViewable       Boolean                         @default(true)
-  productOptionType     Product_productoptiontype_enum?
-  productMultipleOption Json?                           @db.Json
-  paymentMethods        Product_paymentmethods_enum[]
-  productRemark         String?                         @db.VarChar(100)
-  productNotice         Json?                           @db.Json
-  salesCount            Int                             @default(0)
-  reviewCount           Int                             @default(0)
-  productUniqueKey      String?                         @db.VarChar(100)
-  productCategoryId     Int?
-  productBrandId        Int?
-  thumbnailMediaId      Int?
-  deliveryTemplateId    Int?
-  productOrderBy        Int?
-  sixMonthCount         Int                             @default(0)
-  OrderItemReview       OrderItemReview[]
-  ProductBrand          ProductBrand?                   @relation(fields: [productBrandId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_0b22c880a519350cbc9bb24aad5")
-  Media                 Media?                          @relation(fields: [thumbnailMediaId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_9f97a2f85493b8e1af3056787e4")
-  ProductCategory       ProductCategory?                @relation(fields: [productCategoryId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_a9d116fa9933f215502466a8177")
-  DeliveryTemplate      DeliveryTemplate?               @relation(fields: [deliveryTemplateId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_c3db76ff7f55ef37c5b2d2115ce")
-  ProductMedia          ProductMedia[]
-  ProductOption         ProductOption[]
-  ProductSearchBridge   ProductSearchBridge[]
-  ProductSpec           ProductSpec[]
-  ShoppingBasket        ShoppingBasket[]
+  id                            Int                             @id(map: "PK_9fc040db7872192bbc26c515710") @default(autoincrement())
+  createdAt                     DateTime                        @default(now()) @db.Timestamptz(6)
+  updatedAt                     DateTime                        @default(now()) @db.Timestamptz(6)
+  deletedAt                     DateTime?                       @db.Timestamptz(6)
+  productName                   String                          @db.VarChar(100)
+  productModelNo                String                          @db.VarChar(100)
+  productExposureTags           String[]                        @db.VarChar(100)
+  productCompany                String                          @db.VarChar(100)
+  productOrigin                 String?                         @db.VarChar(100)
+  madeAt                        String?                         @db.VarChar(200)
+  expiredAt                     String?                         @db.VarChar(200)
+  productIntroduction           String                          @db.VarChar(200)
+  kcMarkNo                      String?                         @db.VarChar(200)
+  productBadge                  Product_productbadge_enum?
+  taxType                       Product_taxtype_enum
+  salePrice                     Int
+  discountRate                  Int?
+  exposurePrice                 Int?
+  productStockCheckable         Boolean                         @default(true)
+  isSoldOut                     Boolean                         @default(false)
+  productViewable               Boolean                         @default(true)
+  productOptionType             Product_productoptiontype_enum?
+  productMultipleOption         Json?                           @db.Json
+  paymentMethods                Product_paymentmethods_enum[]
+  productRemark                 String?                         @db.VarChar(100)
+  productNotice                 Json?                           @db.Json
+  salesCount                    Int                             @default(0)
+  reviewCount                   Int                             @default(0)
+  productUniqueKey              String?                         @db.VarChar(100)
+  productCategoryId             Int?
+  productBrandId                Int?
+  thumbnailMediaId              Int?
+  deliveryTemplateId            Int?
+  productOrderBy                Int?
+  sixMonthCount                 Int                             @default(0)
+  representativeVehicleDetailId Int?
+  OrderItemReview               OrderItemReview[]
+  ProductBrand                  ProductBrand?                   @relation(fields: [productBrandId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_0b22c880a519350cbc9bb24aad5")
+  Media                         Media?                          @relation(fields: [thumbnailMediaId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_9f97a2f85493b8e1af3056787e4")
+  VehicleDetail                 VehicleDetail?                  @relation(fields: [representativeVehicleDetailId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_VehicleDetail_Id")
+  ProductCategory               ProductCategory?                @relation(fields: [productCategoryId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_a9d116fa9933f215502466a8177")
+  DeliveryTemplate              DeliveryTemplate?               @relation(fields: [deliveryTemplateId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_c3db76ff7f55ef37c5b2d2115ce")
+  ProductMedia                  ProductMedia[]
+  ProductOption                 ProductOption[]
+  ProductSearchBridge           ProductSearchBridge[]
+  ProductSpec                   ProductSpec[]
+  ShoppingBasket                ShoppingBasket[]
 
   @@index([productModelNo], map: "IDX_3d737be25e37170216104db91f")
   @@index([productName], map: "IDX_73337bae4f610f2aef184f44b6")
@@ -1832,22 +1881,23 @@ model ProductBrand {
 }
 
 model ProductCategory {
-  id                      Int               @id(map: "PK_6e66c6182b5d0091b7f0e2deb0b") @default(autoincrement())
-  createdAt               DateTime          @default(now()) @db.Timestamptz(6)
-  updatedAt               DateTime          @default(now()) @db.Timestamptz(6)
-  deletedAt               DateTime?         @db.Timestamptz(6)
-  productCategoryName     String            @db.VarChar(100)
-  productCategoryDepth    Int               @default(1)
-  viewable                Boolean           @default(true)
-  weight                  Int               @default(1)
-  productCategoryRemark   String?           @db.VarChar(100)
-  parentProductCategoryId Int?
-  CouponTemplate          CouponTemplate[]
-  OrderItem               OrderItem[]
-  Product                 Product[]
-  ProductCategory         ProductCategory?  @relation("ProductCategoryToProductCategory", fields: [parentProductCategoryId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_fcc9e8a2c353018336caec4a5f8")
-  other_ProductCategory   ProductCategory[] @relation("ProductCategoryToProductCategory")
-  ProductSearch           ProductSearch[]
+  id                         Int                          @id(map: "PK_6e66c6182b5d0091b7f0e2deb0b") @default(autoincrement())
+  createdAt                  DateTime                     @default(now()) @db.Timestamptz(6)
+  updatedAt                  DateTime                     @default(now()) @db.Timestamptz(6)
+  deletedAt                  DateTime?                    @db.Timestamptz(6)
+  productCategoryName        String                       @db.VarChar(100)
+  productCategoryDepth       Int                          @default(1)
+  viewable                   Boolean                      @default(true)
+  weight                     Int                          @default(1)
+  productCategoryRemark      String?                      @db.VarChar(100)
+  parentProductCategoryId    Int?
+  CouponTemplate             CouponTemplate[]
+  CouponTemplateVerifyOption CouponTemplateVerifyOption[]
+  OrderItem                  OrderItem[]
+  Product                    Product[]
+  ProductCategory            ProductCategory?             @relation("ProductCategoryToProductCategory", fields: [parentProductCategoryId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_fcc9e8a2c353018336caec4a5f8")
+  other_ProductCategory      ProductCategory[]            @relation("ProductCategoryToProductCategory")
+  ProductSearch              ProductSearch[]
 }
 
 model ProductMedia {
@@ -1966,47 +2016,58 @@ model ProductSpec {
 }
 
 model Promotion {
-  id                                           Int                            @id(map: "PK_d21eaf286df75f58d90e63d586b") @default(autoincrement())
-  createdAt                                    DateTime                       @default(now()) @db.Timestamptz(6)
-  updatedAt                                    DateTime                       @default(now()) @db.Timestamptz(6)
-  deletedAt                                    DateTime?                      @db.Timestamptz(6)
-  promotionName                                String                         @db.VarChar(100)
-  promotionStatus                              Promotion_promotionstatus_enum
-  promotionAvailableTo                         DateTime                       @db.Timestamptz(6)
-  promotionAvailableFrom                       DateTime                       @db.Timestamptz(6)
-  promotionAnchorColor                         String?                        @db.VarChar(30)
-  promotionNotice                              String?                        @db.VarChar(2000)
-  displayName                                  String?                        @db.VarChar(100)
-  displayDescription                           String?                        @db.VarChar(100)
-  displayType                                  Promotion_displaytype_enum?
-  displayProductIds                            Int[]
-  weight                                       Int?
-  couponBackground                             String?                        @db.VarChar(30)
-  couponAreaColor                              String?                        @db.VarChar(20)
-  couponIds                                    Int[]
-  promotionMediaId                             Int
-  promotionShareMediaId                        Int
-  displayMediaId                               Int?
-  isActivatedCoupon                            Boolean                        @default(false)
-  isDisplayCouponButton                        Boolean?
-  promotionThemeColor                          String?                        @db.VarChar(30)
-  Media_Promotion_displayMediaIdToMedia        Media?                         @relation("Promotion_displayMediaIdToMedia", fields: [displayMediaId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_09b1f9b732e2f5cde61f520bcd6")
-  Media_Promotion_promotionShareMediaIdToMedia Media                          @relation("Promotion_promotionShareMediaIdToMedia", fields: [promotionShareMediaId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_51d72026e9cc4322e82d5f8e5f7")
-  Media_Promotion_promotionMediaIdToMedia      Media                          @relation("Promotion_promotionMediaIdToMedia", fields: [promotionMediaId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_975cb9df7661c96e1d426ec5779")
-  PromotionProductGroup                        PromotionProductGroup[]
+  id                                                            Int                            @id(map: "PK_d21eaf286df75f58d90e63d586b") @default(autoincrement())
+  createdAt                                                     DateTime                       @default(now()) @db.Timestamptz(6)
+  updatedAt                                                     DateTime                       @default(now()) @db.Timestamptz(6)
+  deletedAt                                                     DateTime?                      @db.Timestamptz(6)
+  promotionName                                                 String                         @db.VarChar(100)
+  promotionStatus                                               Promotion_promotionstatus_enum
+  promotionAvailableTo                                          DateTime                       @db.Timestamptz(6)
+  promotionAvailableFrom                                        DateTime                       @db.Timestamptz(6)
+  promotionAnchorColor                                          String?                        @db.VarChar(30)
+  promotionNotice                                               String?                        @db.VarChar(2000)
+  displayName                                                   String?                        @db.VarChar(100)
+  displayDescription                                            String?                        @db.VarChar(100)
+  displayType                                                   Promotion_displaytype_enum?
+  displayProductIds                                             Int[]
+  weight                                                        Int?
+  couponBackground                                              String[]                       @db.VarChar
+  couponAreaColor                                               String?                        @db.VarChar(20)
+  couponIds                                                     Int[]
+  promotionMediaId                                              Int
+  promotionShareMediaId                                         Int
+  displayMediaId                                                Int?
+  isActivatedCoupon                                             Boolean                        @default(false)
+  isDisplayCouponButton                                         Boolean?
+  promotionThemeColor                                           String?                        @db.VarChar(30)
+  createdAdministratorId                                        Int?
+  updatedAdministratorId                                        Int?
+  promotionMobileMediaId                                        Int?
+  Media_Promotion_displayMediaIdToMedia                         Media?                         @relation("Promotion_displayMediaIdToMedia", fields: [displayMediaId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_09b1f9b732e2f5cde61f520bcd6")
+  Media_Promotion_promotionShareMediaIdToMedia                  Media                          @relation("Promotion_promotionShareMediaIdToMedia", fields: [promotionShareMediaId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_51d72026e9cc4322e82d5f8e5f7")
+  Media_Promotion_promotionMediaIdToMedia                       Media                          @relation("Promotion_promotionMediaIdToMedia", fields: [promotionMediaId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_975cb9df7661c96e1d426ec5779")
+  Administrator_Promotion_createdAdministratorIdToAdministrator Administrator?                 @relation("Promotion_createdAdministratorIdToAdministrator", fields: [createdAdministratorId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_Promotion_createdAdministratorId")
+  Media_Promotion_promotionMobileMediaIdToMedia                 Media?                         @relation("Promotion_promotionMobileMediaIdToMedia", fields: [promotionMobileMediaId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_Promotion_promotionMobileMediaId")
+  Administrator_Promotion_updatedAdministratorIdToAdministrator Administrator?                 @relation("Promotion_updatedAdministratorIdToAdministrator", fields: [updatedAdministratorId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_Promotion_updatedAdministratorId")
+  PromotionProductGroup                                         PromotionProductGroup[]
 }
 
 model PromotionProductGroup {
-  id                      Int        @id(map: "PK_19380fa370c122c7c7264858ab8") @default(autoincrement())
-  createdAt               DateTime   @default(now()) @db.Timestamptz(6)
-  updatedAt               DateTime   @default(now()) @db.Timestamptz(6)
-  deletedAt               DateTime?  @db.Timestamptz(6)
-  productGroupName        String     @db.VarChar(5)
-  productGroupTitle       String     @db.VarChar(20)
-  productGroupDescription String?    @db.VarChar(40)
-  productGroupProductIds  Int[]
-  promotionId             Int?
-  Promotion               Promotion? @relation(fields: [promotionId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_06ffba9e4e4fb93ed74bb3a2091")
+  id                                                           Int        @id(map: "PK_19380fa370c122c7c7264858ab8") @default(autoincrement())
+  createdAt                                                    DateTime   @default(now()) @db.Timestamptz(6)
+  updatedAt                                                    DateTime   @default(now()) @db.Timestamptz(6)
+  deletedAt                                                    DateTime?  @db.Timestamptz(6)
+  productGroupName                                             String     @db.VarChar(10)
+  productGroupTitle                                            String     @db.VarChar(20)
+  productGroupDescription                                      String?    @db.VarChar(40)
+  productGroupProductIds                                       Int[]
+  promotionId                                                  Int?
+  groupTabName                                                 String?    @db.VarChar(10)
+  productGroupMediaId                                          Int?
+  productGroupMobileMediaId                                    Int?
+  Promotion                                                    Promotion? @relation(fields: [promotionId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_06ffba9e4e4fb93ed74bb3a2091")
+  Media_PromotionProductGroup_productGroupMediaIdToMedia       Media?     @relation("PromotionProductGroup_productGroupMediaIdToMedia", fields: [productGroupMediaId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_PromotionProductGroup_productGroupMediaId")
+  Media_PromotionProductGroup_productGroupMobileMediaIdToMedia Media?     @relation("PromotionProductGroup_productGroupMobileMediaIdToMedia", fields: [productGroupMobileMediaId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_PromotionProductGroup_productGroupMobileMediaId")
 }
 
 model PublicHoliday {
@@ -2225,6 +2286,7 @@ model RepairShop {
   RepairShopMaster_RepairShopMaster_parentRepairShopIdToRepairShop       RepairShopMaster[]                       @relation("RepairShopMaster_parentRepairShopIdToRepairShop")
   RepairShopMedia                                                        RepairShopMedia[]
   RepairShopReview                                                       RepairShopReview[]
+  RepairShopSlotLog                                                      RepairShopSlotLog[]
   RepairShopTemporaryBusiness                                            RepairShopTemporaryBusiness[]
   RepairShopUnableTime                                                   RepairShopUnableTime[]
 
@@ -2389,6 +2451,8 @@ model RepairShopUnableTime {
   businessUnabledAt DateTime   @db.Timestamptz(6)
   repairShopId      Int
   RepairShop        RepairShop @relation(fields: [repairShopId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_e724d008b9689c6bdcb1a0bcf94")
+
+  @@index([businessUnabledAt, repairShopId], map: "repairshopunabletime_businessunabledat_idx")
 }
 
 model Review {
@@ -2436,6 +2500,7 @@ model ReviewItem {
   reviewType               ReviewLabel_reviewlabeltype_enum?
   reviewWeight             Int                               @default(0)
   BatteryRushReview        BatteryRushReview?
+  OnSiteReview             OnSiteReview?
   OrderItemReview          OrderItemReview?
   RepairShopReview         RepairShopReview?
   ReviewClaim              ReviewClaim[]
@@ -2806,8 +2871,9 @@ model VehicleDetail {
   displayBatteryModel    String?             @db.VarChar(150)
   vehicleId              Int?
   engineOilViscosity     String?             @db.VarChar(10)
-  engineOilGrade         String?             @db.VarChar(20)
+  engineOilGrade         String?             @db.VarChar
   CustomerVehicle        CustomerVehicle[]
+  Product                Product[]
   Vehicle                Vehicle?            @relation(fields: [vehicleId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_4c4e8e7a6d21c2fcd7149932928")
   VehicleDetailPart      VehicleDetailPart[]
   VehicleDetailTire      VehicleDetailTire[]
@@ -2937,6 +3003,7 @@ model VehicleWashStation {
   accountId                                                      Int?                                              @unique(map: "REL_7bab170d74d8b4d6a7928b608c")
   vendorId                                                       Int?
   isAvailableEV                                                  Boolean?                                          @default(true)
+  vehicleWashStationCode                                         String?                                           @db.VarChar(10)
   Media_VehicleWashStation_vehicleWashStationBrandMediaIdToMedia Media?                                            @relation("VehicleWashStation_vehicleWashStationBrandMediaIdToMedia", fields: [vehicleWashStationBrandMediaId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_429060ae9a304d9ec57ebf831b4")
   Account                                                        Account?                                          @relation(fields: [accountId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_7bab170d74d8b4d6a7928b608c3")
   Vendor                                                         Vendor?                                           @relation(fields: [vendorId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_7ddcb59d21c08e46588fc78cdf4")
@@ -3077,6 +3144,378 @@ model ReviewUp {
   @@unique([reviewItemId, customerId], map: "UQ_ReviewUp_reviewItemId_customerId")
 }
 
+model CouponHistory {
+  id                 Int       @id(map: "PK_CouponHistory_id") @default(autoincrement())
+  createdAt          DateTime  @default(now()) @db.Timestamptz(6)
+  updatedAt          DateTime  @default(now()) @db.Timestamptz(6)
+  deletedAt          DateTime? @db.Timestamptz(6)
+  orderNo            String    @db.VarChar(100)
+  orderItemNo        String?   @db.VarChar(100)
+  couponId           Int
+  couponTemplateJson Json?     @db.Json
+  totalPrice         Int       @default(0)
+  price              Int       @default(0)
+  tax                Int       @default(0)
+  couponDiscountType String?   @db.VarChar(100)
+  couponJson         Json?     @db.Json
+  Coupon             Coupon    @relation(fields: [couponId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_CouponHistory_couponId")
+}
+
+model CouponTemplateVerifyOption {
+  id                Int              @id(map: "PK_CouponTemplateVerifyOption_Id") @default(autoincrement())
+  createdAt         DateTime         @default(now()) @db.Timestamptz(6)
+  updatedAt         DateTime         @default(now()) @db.Timestamptz(6)
+  couponTemplateId  Int?
+  productCategoryId Int?
+  minAmount         Int
+  deletedAt         DateTime?        @db.Timestamptz(6)
+  CouponTemplate    CouponTemplate?  @relation(fields: [couponTemplateId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_CouponTemplateVerifyOption_couponTemplateId")
+  ProductCategory   ProductCategory? @relation(fields: [productCategoryId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_CouponTemplateVerifyOption_productCategoryId")
+
+  @@unique([couponTemplateId, productCategoryId], map: "IDX_CouponTemplateVerifyOption")
+}
+
+model EmergencyTask {
+  id                   Int       @id(map: "PK_EmergencyTask_id") @default(autoincrement())
+  createdAt            DateTime  @default(now()) @db.Timestamptz(6)
+  updatedAt            DateTime  @default(now()) @db.Timestamptz(6)
+  deletedAt            DateTime? @db.Timestamptz(6)
+  uniqueKey            String    @db.VarChar(100)
+  uniqueKeyDescription String?   @db.VarChar(100)
+  requestType          String?   @db.VarChar(1000)
+  requestDescription   String?   @db.VarChar(1000)
+  taskStatus           String?   @db.VarChar(100)
+}
+
+model NoticeHistory {
+  id           Int      @id(map: "PK_NoticeHistory_Id") @default(autoincrement())
+  createdAt    DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt    DateTime @default(now()) @db.Timestamptz(6)
+  repairShopId Int?
+  responseData String?  @db.VarChar(5000)
+  noticeId     Int
+  Notice       Notice   @relation(fields: [noticeId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "NoticeHistory")
+}
+
+model Notification {
+  id                     Int                                  @id(map: "PK_Notification_Id") @default(autoincrement())
+  createdAt              DateTime                             @default(now()) @db.Timestamptz(6)
+  updatedAt              DateTime                             @default(now()) @db.Timestamptz(6)
+  deletedAt              DateTime?                            @db.Timestamptz(6)
+  type                   Notification_notificationtype_enum
+  name                   String                               @db.VarChar(100)
+  contents               String?                              @db.VarChar(5000)
+  description            String?                              @db.VarChar(5000)
+  fromAvailabledDate     DateTime?                            @db.Timestamptz(6)
+  toAvailabledDate       DateTime?                            @db.Timestamptz(6)
+  viewable               Boolean                              @default(true)
+  target                 Notification_notificationtarget_enum
+  assignedTargetIds      Int[]
+  createdAdministratorId Int?
+  updatedAdministratorId Int?
+  NotificationHistory    NotificationHistory[]
+}
+
+model NotificationHistory {
+  id             Int          @id(map: "PK_NotificationHistory_Id") @default(autoincrement())
+  createdAt      DateTime     @default(now()) @db.Timestamptz(6)
+  updatedAt      DateTime     @default(now()) @db.Timestamptz(6)
+  targetId       Int?
+  responseBody   String?      @db.VarChar(5000)
+  notificationId Int
+  Notification   Notification @relation(fields: [notificationId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_NotificationHistory_notificationId")
+}
+
+model OilBankVehicleWashStation {
+  id                     Int                      @id(map: "PK_OilBankVehicleWashStation_id") @default(autoincrement())
+  createdAt              DateTime                 @default(now()) @db.Timestamptz(6)
+  updatedAt              DateTime                 @default(now()) @db.Timestamptz(6)
+  deletedAt              DateTime?                @db.Timestamptz(6)
+  receivedDate           String                   @db.VarChar(8)
+  vehicleWashStationCode String                   @db.VarChar(10)
+  vehicleWashStationName String?                  @db.VarChar(200)
+  street                 String?                  @db.VarChar
+  detail                 String?                  @db.VarChar
+  lat                    String?                  @db.VarChar(30)
+  lng                    String?                  @db.VarChar(30)
+  geometry               Unsupported("geometry")?
+  tel                    String?                  @db.VarChar(20)
+
+  @@unique([receivedDate, vehicleWashStationCode], map: "unique_oil_bank_vehicle_wash_station_code")
+}
+
+model OnSite {
+  id                 Int                       @id(map: "PK_OnSite_id") @default(autoincrement())
+  createdAt          DateTime                  @default(now()) @db.Timestamptz(6)
+  updatedAt          DateTime                  @default(now()) @db.Timestamptz(6)
+  deletedAt          DateTime?                 @db.Timestamptz(6)
+  onSiteNo           String                    @db.VarChar(100)
+  onSitePrice        Int
+  onSiteTax          Float?
+  onSiteTaxType      OnSite_onsitetaxtype_enum
+  onSiteMemo         String?                   @db.VarChar(500)
+  pendedAt           DateTime?                 @db.Timestamptz(6)
+  onSitedAt          DateTime?                 @db.Timestamptz(6)
+  regionDepth1       String?                   @db.VarChar(100)
+  regionDepth2       String?                   @db.VarChar(100)
+  regionDepth3       String?                   @db.VarChar(100)
+  zipCode            String?                   @db.VarChar(5)
+  country            String?                   @db.VarChar(2)
+  detail             String?                   @db.VarChar(50)
+  street             String?                   @db.VarChar(100)
+  zibun              String?                   @db.VarChar(100)
+  paymentCompletedAt DateTime?                 @db.Timestamptz(6)
+  approvedAt         DateTime?                 @db.Timestamptz(6)
+  canceledAt         DateTime?                 @db.Timestamptz(6)
+  completedAt        DateTime?                 @db.Timestamptz(6)
+  isOnSiteReturn     Boolean?
+  OnSiteReview       OnSiteReview?
+}
+
+model OnSiteReview {
+  id           Int         @id(map: "PK_OnSiteReview_id") @default(autoincrement())
+  createdAt    DateTime    @default(now()) @db.Timestamptz(6)
+  updatedAt    DateTime    @default(now()) @db.Timestamptz(6)
+  deletedAt    DateTime?   @db.Timestamptz(6)
+  onSiteId     Int?        @unique(map: "REL_OnSiteReview_onSiteId")
+  reviewItemId Int?        @unique(map: "REL_OnSiteReview_reviewItemId")
+  customerId   Int?
+  Customer     Customer?   @relation(fields: [customerId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_OnSiteReview_customerId")
+  OnSite       OnSite?     @relation(fields: [onSiteId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_OnSiteReview_onSiteId")
+  ReviewItem   ReviewItem? @relation(fields: [reviewItemId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_OnSiteReview_reviewItemId")
+}
+
+model PointEarnTarget {
+  id                       Int                        @id(map: "PK_PointEarnTarget_id") @default(autoincrement())
+  createdAt                DateTime                   @default(now()) @db.Timestamptz(6)
+  updatedAt                DateTime                   @default(now()) @db.Timestamptz(6)
+  deletedAt                DateTime?                  @db.Timestamptz(6)
+  targetCategory           String                     @db.VarChar(100)
+  targetType               String?                    @db.VarChar(100)
+  targetClass1             String?                    @db.VarChar(100)
+  targetClass2             String?                    @db.VarChar(100)
+  targetClass3             String?                    @db.VarChar(100)
+  targetClass4             String?                    @db.VarChar(100)
+  targetId                 Int?
+  targetMinAmount          Int?
+  gId                      Json?                      @db.Json
+  PointPolicyEarnTargetMap PointPolicyEarnTargetMap[]
+}
+
+model PointPolicy {
+  id                                                              Int                        @id(map: "PK_PointPolicy_id") @default(autoincrement())
+  createdAt                                                       DateTime                   @default(now()) @db.Timestamptz(6)
+  updatedAt                                                       DateTime                   @default(now()) @db.Timestamptz(6)
+  deletedAt                                                       DateTime?                  @db.Timestamptz(6)
+  title                                                           String                     @db.VarChar(100)
+  earnMethod                                                      String                     @db.VarChar(50)
+  rateTarget                                                      String?                    @db.VarChar(100)
+  point                                                           Int                        @default(0)
+  maxAmount                                                       Int                        @default(0)
+  availableType                                                   String                     @db.VarChar(50)
+  availablePeriod                                                 Int?
+  toAvailabledAt                                                  DateTime?                  @db.Timestamptz(6)
+  uniqueCode                                                      String?                    @db.VarChar(200)
+  policyStartedAt                                                 DateTime                   @default(now()) @db.Timestamptz(6)
+  policyEndedAt                                                   DateTime                   @default(now()) @db.Timestamptz(6)
+  isOperating                                                     Boolean                    @default(false)
+  createdAdministratorId                                          Int?
+  updatedAdministratorId                                          Int?
+  description                                                     String?                    @db.VarChar(500)
+  policyType                                                      String                     @db.VarChar(50)
+  Administrator_PointPolicy_createdAdministratorIdToAdministrator Administrator?             @relation("PointPolicy_createdAdministratorIdToAdministrator", fields: [createdAdministratorId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_PointPolicy_createdAdministratorId")
+  Administrator_PointPolicy_updatedAdministratorIdToAdministrator Administrator?             @relation("PointPolicy_updatedAdministratorIdToAdministrator", fields: [updatedAdministratorId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_PointPolicy_updatedAdministratorId")
+  PointPolicyEarnTargetMap                                        PointPolicyEarnTargetMap[]
+  PointTransaction                                                PointTransaction[]
+  Voucher                                                         Voucher[]
+}
+
+model PointPolicyEarnTargetMap {
+  id                Int             @id(map: "PK_PointPolicyEarnTargetMap_id") @default(autoincrement())
+  createdAt         DateTime        @default(now()) @db.Timestamptz(6)
+  updatedAt         DateTime        @default(now()) @db.Timestamptz(6)
+  deletedAt         DateTime?       @db.Timestamptz(6)
+  pointPolicyId     Int
+  pointEarnTargetId Int
+  PointEarnTarget   PointEarnTarget @relation(fields: [pointEarnTargetId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_PointPolicyEarnTargetMap_pointEarnTargetId")
+  PointPolicy       PointPolicy     @relation(fields: [pointPolicyId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_PointPolicyEarnTargetMap_pointPolicyId")
+}
+
+model PointTransaction {
+  id                                                                                     Int                      @id(map: "PK_PointTransaction_id") @default(autoincrement())
+  createdAt                                                                              DateTime                 @default(now()) @db.Timestamptz(6)
+  updatedAt                                                                              DateTime                 @default(now()) @db.Timestamptz(6)
+  deletedAt                                                                              DateTime?                @db.Timestamptz(6)
+  customerId                                                                             Int
+  pointPolicyId                                                                          Int?
+  transactionBy                                                                          String                   @db.VarChar(100)
+  transactionType                                                                        String                   @db.VarChar(100)
+  transactionDesc                                                                        String?                  @db.VarChar(200)
+  transactionNo                                                                          String?                  @db.VarChar(100)
+  amount                                                                                 Int                      @default(0)
+  expiredAt                                                                              DateTime?                @db.Timestamptz(6)
+  transactionReason                                                                      String                   @db.VarChar(100)
+  transactionReasonEtc                                                                   String?                  @db.VarChar(100)
+  createdAdministratorId                                                                 Int?
+  transactionMeta                                                                        Json?                    @db.Json
+  Administrator                                                                          Administrator?           @relation(fields: [createdAdministratorId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_PointTransaction_createdAdministratorId")
+  Customer                                                                               Customer                 @relation(fields: [customerId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_PointTransaction_customerId")
+  PointPolicy                                                                            PointPolicy?             @relation(fields: [pointPolicyId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_PointTransaction_pointPolicyId")
+  PointTransactionDetail_PointTransactionDetail_earnPointTransactionIdToPointTransaction PointTransactionDetail[] @relation("PointTransactionDetail_earnPointTransactionIdToPointTransaction")
+  PointTransactionDetail_PointTransactionDetail_pointTransactionIdToPointTransaction     PointTransactionDetail[] @relation("PointTransactionDetail_pointTransactionIdToPointTransaction")
+}
+
+model PointTransactionDetail {
+  id                                                                               Int              @id(map: "PK_PointTransactionDetail_id") @default(autoincrement())
+  createdAt                                                                        DateTime         @default(now()) @db.Timestamptz(6)
+  updatedAt                                                                        DateTime         @default(now()) @db.Timestamptz(6)
+  deletedAt                                                                        DateTime?        @db.Timestamptz(6)
+  customerId                                                                       Int
+  transactionType                                                                  String           @db.VarChar(100)
+  amount                                                                           Int              @default(0)
+  pointTransactionId                                                               Int
+  earnPointTransactionId                                                           Int
+  expiredAt                                                                        DateTime         @db.Timestamptz(6)
+  Customer                                                                         Customer         @relation(fields: [customerId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_PointTransactionDetail_customerId")
+  PointTransaction_PointTransactionDetail_earnPointTransactionIdToPointTransaction PointTransaction @relation("PointTransactionDetail_earnPointTransactionIdToPointTransaction", fields: [earnPointTransactionId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_PointTransactionDetail_earnPointTransactionId")
+  PointTransaction_PointTransactionDetail_pointTransactionIdToPointTransaction     PointTransaction @relation("PointTransactionDetail_pointTransactionIdToPointTransaction", fields: [pointTransactionId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_PointTransactionDetail_pointTransactionId")
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model ProductOption_20230901 {
+  id                       Int?
+  createdAt                DateTime?                                @db.Timestamptz(6)
+  updatedAt                DateTime?                                @db.Timestamptz(6)
+  deletedAt                DateTime?                                @db.Timestamptz(6)
+  productOptionName        String?                                  @db.VarChar(100)
+  productOptionValue       String?                                  @db.VarChar(100)
+  productOptionAmount      Int?
+  salePrice                Int?
+  discountRate             Int?
+  productOptionPrice       Int?
+  productOptionTax         Float?
+  productOptionTaxType     ProductOption_productoptiontaxtype_enum?
+  productOptionSoldOutable Boolean?
+  productOptionViewable    Boolean?
+  productId                Int?
+  extraProductOption       Boolean?
+  productOptionDescription String?                                  @db.VarChar(2000)
+
+  @@ignore
+}
+
+model RepairShopSlotLog {
+  id                      Int                                      @id(map: "PK_abd6053bded2473122dcaa2a477") @default(autoincrement())
+  createdAt               DateTime                                 @default(now()) @db.Timestamptz(6)
+  updatedAt               DateTime                                 @default(now()) @db.Timestamptz(6)
+  deletedAt               DateTime?                                @db.Timestamptz(6)
+  repairShopCode          String?                                  @db.VarChar(50)
+  displayName             String                                   @db.VarChar(200)
+  repairShopStatusType    RepairShop_repairshopstatustype_enum?
+  repairShopFranchiseType RepairShop_repairshopfranchisetype_enum? @default(ETC)
+  regionDepth1            String?                                  @db.VarChar
+  regionDepth2            String?                                  @db.VarChar
+  reservedADate           String                                   @db.VarChar
+  totalSlot               Int?
+  reservedCountInfo       Json?                                    @db.Json
+  repairShopId            Int
+  RepairShop              RepairShop                               @relation(fields: [repairShopId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_ec9206d60185db1d12721e891b9")
+}
+
+model ServiceRegion {
+  id               Int       @id(map: "PK_ServiceRegion_id") @default(autoincrement())
+  createdAt        DateTime  @default(now()) @db.Timestamptz(6)
+  updatedAt        DateTime  @default(now()) @db.Timestamptz(6)
+  deletedAt        DateTime? @db.Timestamptz(6)
+  serviceType      String    @db.VarChar(50)
+  serviceStartTime String    @db.VarChar(10)
+  regionDepth1     String    @db.VarChar
+  regionDepth2     String?   @db.VarChar
+  regionDepth3     String?   @db.VarChar
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model VehicleWashStation_0809 {
+  id                             Int?
+  createdAt                      DateTime?                                          @db.Timestamptz(6)
+  updatedAt                      DateTime?                                          @db.Timestamptz(6)
+  deletedAt                      DateTime?                                          @db.Timestamptz(6)
+  isOperating                    Boolean?
+  isAutoApprove                  Boolean?
+  vehicleWashStationCompany      VehicleWashStation_vehiclewashstationcompany_enum?
+  vehicleWashStationBrand        String?                                            @db.VarChar(200)
+  vehicleWashUseMethod           VehicleWashStation_vehiclewashusemethod_enum?
+  vehicleWashStationName         String?                                            @db.VarChar(200)
+  displayVehicleWashStationName  String?                                            @db.VarChar(200)
+  regionDepth1                   String?                                            @db.VarChar
+  regionDepth2                   String?                                            @db.VarChar
+  regionDepth3                   String?                                            @db.VarChar
+  zipCode                        String?                                            @db.VarChar
+  country                        String?                                            @db.VarChar
+  detail                         String?                                            @db.VarChar
+  street                         String?                                            @db.VarChar
+  zibun                          String?                                            @db.VarChar
+  lat                            String?                                            @db.VarChar(30)
+  lng                            String?                                            @db.VarChar(30)
+  vehicleWashStationGeometry     Unsupported("geometry")?
+  tel                            String?                                            @db.VarChar(20)
+  managerName                    String?                                            @db.VarChar(200)
+  managerPhone                   String?                                            @db.VarChar(200)
+  vehicleWashStationAId          String?                                            @db.VarChar
+  winterSeasonStartBusinessTime  DateTime?                                          @db.Time(6)
+  winterSeasonEndBusinessTime    DateTime?                                          @db.Time(6)
+  summerSeasonStartBusinessTime  DateTime?                                          @db.Time(6)
+  summerSeasonEndBusinessTime    DateTime?                                          @db.Time(6)
+  markerMediaId                  Int?
+  vehicleWashStationBrandMediaId Int?
+  accountId                      Int?
+  vendorId                       Int?
+  isAvailableEV                  Boolean?
+  vehicleWashStaionCode          String?                                            @db.VarChar(10)
+
+  @@ignore
+}
+
+model Voucher {
+  id                                                          Int            @id(map: "PK_PointVoucher_id") @default(autoincrement())
+  createdAt                                                   DateTime       @default(now()) @db.Timestamptz(6)
+  updatedAt                                                   DateTime       @default(now()) @db.Timestamptz(6)
+  deletedAt                                                   DateTime?      @db.Timestamptz(6)
+  title                                                       String         @db.VarChar(100)
+  isOperating                                                 Boolean        @default(false)
+  availableFrom                                               DateTime       @db.Timestamptz(6)
+  availableTo                                                 DateTime       @db.Timestamptz(6)
+  quantity                                                    Int            @default(0)
+  memo                                                        String?        @db.VarChar(200)
+  pointPolicyId                                               Int
+  createdAdministratorId                                      Int?
+  updatedAdministratorId                                      Int?
+  Administrator_Voucher_createdAdministratorIdToAdministrator Administrator? @relation("Voucher_createdAdministratorIdToAdministrator", fields: [createdAdministratorId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_PointVoucher_createdAdministratorId")
+  PointPolicy                                                 PointPolicy    @relation(fields: [pointPolicyId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_PointVoucher_pointPolicyId")
+  Administrator_Voucher_updatedAdministratorIdToAdministrator Administrator? @relation("Voucher_updatedAdministratorIdToAdministrator", fields: [updatedAdministratorId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_PointVoucher_updatedAdministratorId")
+  VoucherCode                                                 VoucherCode[]
+}
+
+model VoucherCode {
+  id        Int       @id(map: "PK_PointVoucherCode_id") @default(autoincrement())
+  createdAt DateTime  @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime  @default(now()) @db.Timestamptz(6)
+  deletedAt DateTime? @db.Timestamptz(6)
+  code      String    @db.VarChar(50)
+  isUsed    Boolean   @default(false)
+  voucherId Int
+  Voucher   Voucher   @relation(fields: [voucherId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_PointVoucherCode_voucherId")
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model temp_repairshop_230807 {
+  repairshopcode String? @db.VarChar(5)
+  managername    String? @db.VarChar(50)
+  managerphone   String? @db.VarChar(16)
+
+  @@ignore
+}
+
 enum Administrator_administratorstatus_enum {
   activation
   dormancy
@@ -3175,6 +3614,7 @@ enum CouponTemplate_coupontype_enum {
   DELIVERY
   PRODUCT
   SERVICE
+  BENEFIT
 }
 
 enum CouponTemplate_paymentmethods_enum {
@@ -3532,10 +3972,10 @@ enum Product_paymentmethods_enum {
 }
 
 enum Product_productbadge_enum {
-  BEST
-  HOT
-  NEW
-  // 이월상품 @map("이월상품")
+  BEST       @map("BEST")  
+  HOT        @map("HOT")
+  NEW        @map("NEW")
+  CARRY_OVER @map("이월상품")
 }
 
 enum Product_productoptiontype_enum {
@@ -3612,8 +4052,10 @@ enum RepairShopBusiness_repairshopholidayworkdays_enum {
 enum RepairShopBusiness_reservationinterval_enum {
   THIRTY             @map("30")
   SIXTY              @map("60")
+  NINETY             @map("90")
   ONE_HUNDRED_TWENTY @map("120")
   ONE_HUNDRED_EIGHTY @map("180")
+  ONE_HUNDRED_FIFTY  @map("150")
 }
 
 enum RepairShopDayOff_dayoffday_enum {
@@ -3655,6 +4097,7 @@ enum RepairShop_repairshopfranchisetype_enum {
   GS  @map("GS엠비즈")
   SM  @map("스피드메이트")
   ETC @map("기타")
+  TF  @map("타이어플라이")
 }
 
 enum RepairShop_repairshoplabel_enum {
@@ -3677,6 +4120,7 @@ enum RepairShop_repairshoptype_enum {
   SIDE_ESTABLISH @map("병설")
   OUT_SIDE       @map("외부")
   DISCOUNT_STORE @map("할인점")
+  // 출장교체 @map("출장교체")
 }
 
 enum Repair_repairshoplabel_enum {
@@ -3691,6 +4135,7 @@ enum ReviewLabel_reviewlabeltype_enum {
   BATTERY_NOW
   BATTERY_NORMAL
   VEHICLE_WASH
+  ON_SITE
 }
 
 enum Reward_channel_enum {
@@ -3828,4 +4273,21 @@ enum CouponTemplate_couponbenefitdisplaytypes_enum {
   NONE
   CALCULATE_PRICE
   TEXT
+}
+
+enum Notification_notificationtarget_enum {
+  REPAIR_SHOP
+  VENDOR
+  REPAIR_SHOP_MASTER
+}
+
+enum Notification_notificationtype_enum {
+  NOTIFICATION
+  SURVEY
+}
+
+enum OnSite_onsitetaxtype_enum {
+  TAX
+  TAX_ZERO
+  TAX_FREE
 }

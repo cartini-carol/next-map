@@ -7,6 +7,7 @@ import {
   ZoomSlider,
   defaults as defaultControls,
 } from "ol/control";
+import { Select, defaults as defaultInteraction } from "ol/interaction";
 import { createStringXY } from "ol/coordinate";
 import WKT from "ol/format/WKT";
 import Layer from "ol/layer/Layer";
@@ -63,6 +64,29 @@ export const Maps: FunctionComponent<{ data: any }> = ({ data }) => {
         scale: size <= 50 ? 1.5 : 1.2,
       }),
     });
+  };
+
+  const selectStyleFunction: StyleLike = (feature, resolution) => {
+    const features = feature.get("features");
+    const size = features.length;
+
+    // 해당 클러스터 숨기고, 세부 아이템 풀기
+    const styles = [
+      new Style({
+        image: new Circle({
+          radius: (250 * size) / resolution,
+          fill: new Fill({
+            color: [255, 255, 255, 0.01],
+          }),
+          stroke: new Stroke({
+            color: [255, 255, 255, 0.01],
+            width: 2,
+          }),
+        }),
+      }),
+    ];
+
+    return styles;
   };
 
   useEffect(() => {
@@ -122,6 +146,13 @@ export const Maps: FunctionComponent<{ data: any }> = ({ data }) => {
           new MousePosition({
             coordinateFormat: createStringXY(6),
             projection: "EPSG:4326",
+          }),
+        ]),
+        interactions: defaultInteraction().extend([
+          new Select({
+            condition: (evt) =>
+              evt.type === "pointermove" || evt.type === "singleclick",
+            style: selectStyleFunction,
           }),
         ]),
       });

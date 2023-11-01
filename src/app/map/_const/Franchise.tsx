@@ -17,6 +17,12 @@ export enum Franchise {
    * @value 기타
    */
   ETC = "기타",
+
+  /**
+   * @type TF
+   * @value 타이어플라이
+   */
+  TF = "타이어플라이",
 }
 
 export type FranchiseType = keyof typeof Franchise;

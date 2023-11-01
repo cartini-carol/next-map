@@ -12,8 +12,12 @@ yarn dev
 pnpm dev
 ```
 
-## db pull
+## db pull & client generate
 
 ```
   npx prisma db pull
+
+
+  npx prisma generate
+
 ```

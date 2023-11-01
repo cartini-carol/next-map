@@ -22,7 +22,7 @@ export default async function MapPage() {
 
   return (
     <div className="w-full h-full">
-      <MapHeaders />
+      {/* <MapHeaders /> */}
 
       <Maps data={repairShop} />
     </div>
