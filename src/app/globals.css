@@ -27,3 +27,22 @@ body {
     )
     rgb(var(--background-start-rgb));
 }
+
+/* 
+  MAP styel
+*/
+
+/* 
+.ol-mouse-posiiton
+*/
+#map .ol-mouse-position {
+  padding: 0.25em 0.5em;
+  background: var(--ol-partial-background-color);
+  left: 8px;
+  bottom: 38px;
+  border-radius: 4px;
+  top: auto;
+  right: auto;
+  color: var(--ol-foreground-color);
+  font-size: 10px;
+}

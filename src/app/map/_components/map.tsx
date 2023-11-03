@@ -7,9 +7,9 @@ import {
   ZoomSlider,
   defaults as defaultControls,
 } from "ol/control";
-import { Select, defaults as defaultInteraction } from "ol/interaction";
 import { createStringXY } from "ol/coordinate";
 import WKT from "ol/format/WKT";
+import { Select, defaults as defaultInteraction } from "ol/interaction";
 import Layer from "ol/layer/Layer";
 import TileLayer from "ol/layer/Tile";
 import VectorLayer from "ol/layer/Vector";
@@ -22,6 +22,7 @@ import { StyleLike } from "ol/style/Style";
 import { FunctionComponent, useEffect, useRef, useState } from "react";
 import { useMapStore } from "../_store/map";
 import { useOverlayStore } from "../_store/overlay";
+import { MapRepairShopList } from "./info/info";
 import { StatisticsOverlay } from "./overlays/statistics";
 
 export const Maps: FunctionComponent<{ data: any }> = ({ data }) => {
@@ -31,7 +32,7 @@ export const Maps: FunctionComponent<{ data: any }> = ({ data }) => {
   const ref = useRef(null);
 
   const [info, setInfo] = useState(undefined);
-  const [ds, setDs] = useState(data);
+  const [selected, setSelected] = useState<Array<Feature>>([]);
 
   /**
    * cluster source style
@@ -66,6 +67,12 @@ export const Maps: FunctionComponent<{ data: any }> = ({ data }) => {
     });
   };
 
+  /**
+   * 새부 파트별 컬러
+   * @param feature
+   * @param resolution
+   * @returns
+   */
   const selectStyleFunction: StyleLike = (feature, resolution) => {
     const features = feature.get("features");
     const size = features.length;
@@ -76,7 +83,7 @@ export const Maps: FunctionComponent<{ data: any }> = ({ data }) => {
         image: new Circle({
           radius: (250 * size) / resolution,
           fill: new Fill({
-            color: [255, 255, 255, 0.01],
+            color: [255, 255, 255, 0.8],
           }),
           stroke: new Stroke({
             color: [255, 255, 255, 0.01],
@@ -123,6 +130,8 @@ export const Maps: FunctionComponent<{ data: any }> = ({ data }) => {
 
       layer.set("name", "repairShop");
       map.addLayer(layer);
+
+      console.log(map);
     }
   }, [map, data]);
 
@@ -150,8 +159,7 @@ export const Maps: FunctionComponent<{ data: any }> = ({ data }) => {
         ]),
         interactions: defaultInteraction().extend([
           new Select({
-            condition: (evt) =>
-              evt.type === "pointermove" || evt.type === "singleclick",
+            condition: (evt) => evt.type === "singleclick",
             style: selectStyleFunction,
           }),
         ]),
@@ -190,6 +198,23 @@ export const Maps: FunctionComponent<{ data: any }> = ({ data }) => {
           );
         }
       });
+
+      /**
+       * 선택시 매장리스트 보여주기
+       */
+      map.on("singleclick", (e: MapBrowserEvent<any>) => {
+        if (map) {
+          const features = map.getFeaturesAtPixel(e.pixel, {
+            layerFilter: (layer) => layer?.get("name") === "repairShop",
+          });
+
+          if (features?.length) {
+            setSelected(features[0].get("features"));
+          } else {
+            setSelected([]);
+          }
+        }
+      });
     }
   }, [map]);
 
@@ -201,8 +226,9 @@ export const Maps: FunctionComponent<{ data: any }> = ({ data }) => {
 
   return (
     <div className="relative w-full h-full">
-      <div ref={ref} className="relative w-full h-full" />
+      <div id="map" ref={ref} className="relative w-full h-full" />
       <StatisticsOverlay info={info} />
+      <MapRepairShopList features={selected} />
     </div>
   );
 };

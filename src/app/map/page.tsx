@@ -14,7 +14,11 @@ export default async function MapPage() {
     select: {
       displayName: true,
       repairShopFranchiseType: true,
-      RepairShopOption: true,
+      RepairShopOption: {
+        select: {
+          options: true,
+        },
+      },
       lat: true,
       lng: true,
     },
