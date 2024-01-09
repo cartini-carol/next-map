@@ -19,10 +19,10 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <div className="relative w-screen h-screen box-border flex flex-col">
-          <NextAuthProvider>
-            {/* <Headers /> */}
-            {children}
-          </NextAuthProvider>
+          {/* <NextAuthProvider> */}
+          {/* <Headers /> */}
+          {children}
+          {/* </NextAuthProvider> */}
         </div>
       </body>
     </html>

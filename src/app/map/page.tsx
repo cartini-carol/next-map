@@ -12,6 +12,7 @@ export default async function MapPage() {
       repairShopStatusType: "OPERATION",
     },
     select: {
+      id: true,
       displayName: true,
       repairShopFranchiseType: true,
       RepairShopOption: {

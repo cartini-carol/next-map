@@ -29,7 +29,7 @@ export type FranchiseType = keyof typeof Franchise;
 
 export const franchiseColor: { [k: string]: string } = {
   SM: "bg-red-300",
-  GM: "bg-orange-300",
+  GS: "bg-orange-300",
   TF: "bg-green-300",
   ETC: "bg-gray-300",
 };
