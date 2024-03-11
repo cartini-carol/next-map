@@ -1,10 +1,26 @@
 "use client";
 
-import { DragEvent, FunctionComponent, useEffect, useState } from "react";
+import { useImageMetaStore } from "app/canvas/_store/meta";
+import {
+  ChangeEvent,
+  DragEvent,
+  FunctionComponent,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 
 export const Upload: FunctionComponent = () => {
+  const setMeta = useImageMetaStore((state) => state.setMeta);
+  const ref = useRef<HTMLInputElement>(null);
+
   const [imageData, setImageData] = useState<File | undefined>();
 
+  /**
+   * 드래그앤드롭 핸들러
+   * @param e
+   * @returns
+   */
   const dropHandler = (e: DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     const dt = e.dataTransfer;
@@ -21,44 +37,107 @@ export const Upload: FunctionComponent = () => {
     }
   };
 
+  /**
+   * 파일 업로드 핸들러
+   * @param e
+   */
+  const uploadHandler = (e: ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    if (e.target.files?.length) {
+      setImageData(e.target.files[0]);
+    }
+  };
+
   useEffect(() => {
     if (imageData) {
-      const reader = new FileReader();
+      const reader = new FileReader(); // 업로드된 파일 읽기
 
       const canvas = document.querySelector("#canvas") as HTMLCanvasElement;
       const ctx = canvas.getContext("2d");
 
+      /**
+       * 캔버스 해상도 조절
+       */
+      const dpr = window.devicePixelRatio;
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = rect.width * dpr;
+      canvas.height = rect.height * dpr;
+      ctx?.scale(dpr, dpr);
+      canvas.style.width = `${rect.width}px`;
+      canvas.style.height = `${rect.height}px`;
+
       reader.addEventListener("load", (e) => {
-        const img = new Image();
+        // 파일 로드
+        const img = new Image(); // 이미지 처리
         if (e.target?.result) {
           img.addEventListener("load", () => {
-            const wr = canvas.width / img.width;
-            const hr = canvas.height / img.height;
-            const scale = Math.min(wr, hr);
+            const w = img.naturalWidth; // 실 사이즈
+            const h = img.naturalHeight; // 실 사이즈
 
-            const dx = canvas.width / 2 - (img.width / 2) * scale;
-            const dy = canvas.height / 2 - (img.height / 2) * scale;
+            setMeta({
+              w: img.naturalWidth,
+              h: img.naturalHeight,
+              name: imageData.name, // 이미지명
+              size: imageData.size, // 이미지 사이즈
+              type: imageData.type, // 이미지 유형
+            });
 
-            ctx?.clearRect(0, 0, canvas.width, canvas.height);
-            ctx?.drawImage(img, dx, dy, img.width * scale, img.height * scale);
+            /**
+             * 비율 구하기
+             */
+            const wr = canvas.width / w;
+            const hr = canvas.height / h;
+
+            const scale = Math.min(wr, hr); // w, h 보다 작은 비율 로 처리 (view 안에 담기도록)
+
+            /**
+             * 캔버스 중간에 이미지 중심 올 수 있도록 버퍼값 구하기
+             * d = canvas.center - view-image.center (실제 이미지 사이즈가 아니라, canvas에 그려질 비율조정된 이미지 사이즈)
+             */
+            const dx = canvas.width / 2 - (w * scale) / 2; // 캔버스 중심에 이미지 중심오도록 버퍼값
+            const dy = canvas.height / 2 - (h * scale) / 2;
+
+            ctx?.reset(); // 기존 이미지 지우기
+            ctx?.drawImage(
+              img,
+              0,
+              0,
+              img.width,
+              img.height,
+              dx,
+              dy,
+              w * scale,
+              h * scale
+            );
           });
           img.src = e.target.result as string;
         }
       });
       reader.readAsDataURL(imageData);
     }
-  }, [imageData]);
+  }, [imageData, setMeta]);
 
   return (
     <div
-      className="border-dashed border-gray-500 border-2 p-2 h-28 flex align-middle justify-center"
+      className="border-dashed border-gray-500 border-2 p-2 h-28 flex align-middle justify-center cursor-pointer"
       draggable
       onDrop={dropHandler}
       onDragOver={(e: DragEvent<HTMLDivElement>) => {
         e.preventDefault();
       }}
+      onClick={(e) => {
+        ref.current?.click();
+      }}
     >
-      drag n drop
+      <input
+        ref={ref}
+        type="file"
+        hidden
+        accept="image/*"
+        multiple={false}
+        onChange={uploadHandler}
+      />
+      클릭 또는 파일 드래그
     </div>
   );
 };
