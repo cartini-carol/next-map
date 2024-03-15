@@ -19,4 +19,17 @@ export interface LayerInfo {
    * 소스유형
    */
   sourceType?: "Image" | "Vector";
+  /**
+   * @mappin LayerInfo.id
+   * - Vector는 image layer id 연결
+   */
+  parentId?: number;
+  /**
+   * 생성일시
+   */
+  createdAt?: Date;
+  /**
+   * 수정일시
+   */
+  updatedAt?: Date;
 }

@@ -1,3 +1,5 @@
+import { BoundaryType } from "./type";
+
 /**
  * 벡터정보
  */
@@ -7,10 +9,10 @@ export interface VectorSourceInfo {
    */
   id?: number;
   /**
-   * 위치정보
-   *
+   * 영역정보
+   * 이미지 우상단 0,0 기준
    */
-  position?: Array<Array<number>>;
+  boundary?: BoundaryType;
   /**
    * 추가 속성
    */

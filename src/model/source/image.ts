@@ -9,7 +9,7 @@ export interface ImageSourceInfo {
   /**
    * 이미지 blob
    */
-  blob: string;
+  blob: File;
   /**
    * 추가 속성
    */

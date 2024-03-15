@@ -7,9 +7,19 @@ export class LightClassDexie extends Dexie {
   images!: Table<ImageSourceInfo>;
 
   constructor() {
-    super("canvaDatabase");
+    super("canvasDB");
     this.version(1).stores({
       layers: "++id, sourceId",
+      vectors: "++id",
+      images: "++id",
+    });
+    this.version(1.1).stores({
+      layers: "++id, sourceId",
+      vectors: "++id",
+      images: "++id",
+    });
+    this.version(1.2).stores({
+      layers: "++id, sourceId, sourceType",
       vectors: "++id",
       images: "++id",
     });

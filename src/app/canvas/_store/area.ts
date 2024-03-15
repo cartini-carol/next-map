@@ -8,11 +8,16 @@ interface MapAreaProps {
 }
 
 interface MapAreaStore {
-  area: MapAreaProps | undefined;
+  area: Array<MapAreaProps> | undefined;
   addArea: (select: MapAreaProps) => void;
+  removeArea: () => void;
 }
 
 export const useMapAreaStore = create<MapAreaStore>((set) => ({
   area: undefined,
-  addArea: (select: MapAreaProps) => set((state) => ({ area: select })),
+  addArea: (select: MapAreaProps) =>
+    set((state) => ({
+      area: state.area?.length ? [...state.area, select] : [select],
+    })),
+  removeArea: () => set(() => ({ area: undefined })),
 }));

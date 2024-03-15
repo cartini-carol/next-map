@@ -1,5 +1,7 @@
 "use client";
 
+import { useMapAreaStore } from "app/canvas/_store/area";
+import { useLayerStore } from "app/canvas/_store/layer";
 import { useImageMetaStore } from "app/canvas/_store/meta";
 import {
   ChangeEvent,
@@ -9,9 +11,12 @@ import {
   useRef,
   useState,
 } from "react";
+import { lightDB } from "utils/indexed.db";
 
 export const Upload: FunctionComponent = () => {
   const setMeta = useImageMetaStore((state) => state.setMeta);
+  const removeArea = useMapAreaStore((state) => state.removeArea);
+  const { id, setId } = useLayerStore();
   const ref = useRef<HTMLInputElement>(null);
 
   const [imageData, setImageData] = useState<File | undefined>();
@@ -48,6 +53,37 @@ export const Upload: FunctionComponent = () => {
     }
   };
 
+  const saveImg = async (src: File, properties: any) => {
+    try {
+      const ids: number[] = [];
+      await lightDB.images.each((data) => ids.push(data.id as number));
+
+      const layers = lightDB.layers.filter(
+        (data) =>
+          data.sourceType === "Image" && ids.includes(data.sourceId || 0)
+      );
+      lightDB.images.bulkDelete(ids);
+      layers.delete();
+
+      const sourceId = await lightDB.images.add({
+        blob: src,
+        properties,
+      });
+
+      if (sourceId) {
+        const layerId = await lightDB.layers.add({
+          sourceId: +sourceId,
+          sourceType: "Image",
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        });
+        setId(+layerId);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   useEffect(() => {
     if (imageData) {
       const reader = new FileReader(); // 업로드된 파일 읽기
@@ -74,13 +110,13 @@ export const Upload: FunctionComponent = () => {
             const w = img.naturalWidth; // 실 사이즈
             const h = img.naturalHeight; // 실 사이즈
 
-            setMeta({
+            const properties = {
               w: img.naturalWidth,
               h: img.naturalHeight,
               name: imageData.name, // 이미지명
               size: imageData.size, // 이미지 사이즈
               type: imageData.type, // 이미지 유형
-            });
+            };
 
             /**
              * 비율 구하기
@@ -97,6 +133,14 @@ export const Upload: FunctionComponent = () => {
             const dx = canvas.width / 2 - (w * scale) / 2; // 캔버스 중심에 이미지 중심오도록 버퍼값
             const dy = canvas.height / 2 - (h * scale) / 2;
 
+            setMeta({
+              ...properties,
+              dx,
+              dy,
+              scale,
+            });
+            removeArea(); // 벡터정보 삭제
+
             ctx?.reset(); // 기존 이미지 지우기
             ctx?.drawImage(
               img,
@@ -109,13 +153,14 @@ export const Upload: FunctionComponent = () => {
               w * scale,
               h * scale
             );
+            saveImg(imageData, properties);
           });
           img.src = e.target.result as string;
         }
       });
       reader.readAsDataURL(imageData);
     }
-  }, [imageData, setMeta]);
+  }, [imageData, setMeta, removeArea]);
 
   return (
     <div
